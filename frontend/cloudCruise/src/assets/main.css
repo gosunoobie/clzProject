@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Secular+One&display=swap');
+@tailwind base;
+
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Poppins', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+  font-family: 'Roboto', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+@layer components {
+  .tripturbo-btn {
+    @apply p-2 text-sm font-semibold text-white border-none rounded-md md:text-lg md:p-2 md:px-3 bg-primary-400;
+  }
+  .tripturbo-md-btn {
+    @apply p-2 text-xs font-normal text-white border-none rounded-sm md:text-sm md:p-2 md:px-3 bg-primary-400;
+  }
+  .n-button__content {
+    color: black;
+  }
+
+  @media screen and (max-width: 670px) {
+    .n-date-panel {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+  }
+}

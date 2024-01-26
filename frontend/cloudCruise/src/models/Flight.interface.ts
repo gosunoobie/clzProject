@@ -1,0 +1,209 @@
+export interface FlightSearchPayload {
+  adultPassenger: number
+  childPassenger: number
+  departureDate: string | null
+  destinationLocationCode: string | null
+  originLoactionCode: string | null
+  nationality: string
+  seatClass: string
+  returnFlight: boolean
+  returnDate?: string
+}
+export interface CountryCode {
+  name: string
+  prefix: string
+  code: string
+}
+export interface SectorCode {
+  value: string
+  label: string
+}
+export interface FlightComponentDetails {
+  Airline: string
+  AirlineLogo: string
+  FlightDate: Date
+  FlightNo: string
+  Departure: string
+  DepartureTime: string
+  Arrival: string
+  ArrivalTime: string
+  AircraftType: string
+  Adult: string
+  Child: string
+  Infant: string
+  FlightId: string
+  FlightClassCode: string
+  Currency: string
+  AdultFare: string
+  ChildFare: string
+  InfantFare: string
+  ResFare: string
+  FuelSurcharge: string
+  Tax: string
+  AdultVAT: string
+  ChildVAT: string
+  Refundable: string
+  FreeBaggage: string
+  AgencyCommission: string
+  ChildCommission: string
+  elpasedTime: string
+  timeUnit: string
+  arrivalCode: string
+  departureCode: string
+  AirlineName: string
+  TotalPeople: number
+  totalCommissionedCost: number
+  TotalPrice: number
+  DiscountAmount: number
+  discountFor: string
+  RewardCoins: number
+}
+
+export interface FlightList {
+  Airline: string
+  AirlineLogo: string
+  FlightDate: string
+  FlightNo: string
+  Departure: string
+  DepartureTime: string
+  Arrival: string
+  ArrivalTime: string
+  AircraftType: string
+  Adult: string | null
+  Child: string | null
+  Infant: string
+  FlightId: string
+  FlightClassCode: string
+  Currency: string
+  AdultFare: string
+  ChildFare: string
+  InfantFare: string
+  ResFare: string
+  FuelSurcharge: string
+  Tax: string
+  Refundable: string
+  FreeBaggage: string
+  AgencyCommission: string
+  ChildCommission: string
+  elpasedTime: string
+  timeUnit: string
+  arrivalCode: string
+  departureCode: string
+  AirlineName: string
+  TotalPeople: number
+  totalCommissionedCost: number
+  TotalPrice: number
+  DiscountAmount: number
+  duration?: number
+}
+
+export interface FlightDetailResponse {
+  flightInfo: FlightList[]
+  totalCost: number
+}
+
+type StringOrNull = string | null
+export interface PassengerDetail {
+  first_name: StringOrNull
+  gender: StringOrNull
+  last_name: StringOrNull
+  nationality: StringOrNull
+  passenger_title: StringOrNull
+  passenger_type: StringOrNull
+}
+
+export interface BookingPayload {
+  flight_id: string | null
+  passenger_details: PassengerDetail[]
+}
+
+export interface FlightBookingPayload {
+  contactName: string
+  contactEmail: string
+  billing_address?: number | null
+  contactMobile: string | null
+  bookings: BookingPayload[]
+}
+
+export interface BillingListModel {
+  id: number
+  dateCreated: Date
+  dateModified: Date
+  name: string
+  panOrVatNum: number
+  address: string
+}
+
+export interface DomesticFlightTicketType {
+  id: number
+  airlineLogo: string
+  ticketUrl: string
+  airline: string
+  departureFullName: string
+  arrivalFullName: string
+  firstName: string
+  lastName: string
+  passengerType: string
+  passengerTitle: string
+  nationality: string
+  gender: string
+  flightDate: string
+  issuedDate: string
+  issuedBy: string
+  arrivalDestination: string
+  departureDestination: string
+  arrivalTime: string
+  classCode: string
+  refundable: string
+  flightNo: string
+  flightTime: string
+  baggage: string
+  fareAmount: string
+  fareCurrency: string
+  taxAmount: string
+  taxCurrency: string
+  surcharge: string
+  commissionPlasma: string
+  discountAmount: string
+  costAfterDiscount: string
+  pnrNo: string
+  ticketNo: string
+  totalCommissionedCost: string
+  status: string
+  user: number
+  booking: number
+  supportTicket: any
+}
+
+export interface ActivityTicketType {
+  id: number
+  ticketUrl: string
+  dateCreated: string
+  guid: string
+  forDate: string
+  bookingDate: string
+  isDelivered: boolean
+  nationality: string
+  ageGroup: string
+  isStudent: boolean
+  scannedDate: string
+  booking: number
+}
+
+export interface SelectedFlightType {
+  departureFlight?: FlightList
+  returnFlight?: FlightList
+}
+
+export interface AgodaTicketType {
+  id: number
+  ticketUrl: string
+  dateCreated: Date
+  leadGuest: string
+  guid: string
+  checkIn: Date
+  checkOut: Date
+  booking: number
+  user: number
+  hotel: number
+}
