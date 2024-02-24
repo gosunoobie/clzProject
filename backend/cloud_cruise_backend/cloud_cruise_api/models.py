@@ -27,7 +27,7 @@ class AirlineRoute(models.Model):
         return f"{self.airline.name}({self.arrival.city_name} - {self.destination.city_name})" 
 
 class AirlineSchedule(models.Model):
-    airline = models.ForeignKey(AirlineRoute, on_delete=models.CASCADE )
+    airline_route = models.ForeignKey(AirlineRoute, on_delete=models.CASCADE )
     passenger_per_flight = models.IntegerField()
     adult_fare = models.IntegerField()
     child_fare = models.IntegerField()

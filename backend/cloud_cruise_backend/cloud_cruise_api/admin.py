@@ -13,11 +13,11 @@ class CityAdmin(admin.ModelAdmin):
 
 @admin.register(AirlineRoute)
 class AirlineRouteAdmin(admin.ModelAdmin):
-    list_display = ('id','airline', )
+    list_display = ('id','airline','arrival','destination','flights_per_day' )
 
 @admin.register(AirlineSchedule)
 class AirlineScheduleAdmin(admin.ModelAdmin):
-    list_display = ('id','airline','passenger_per_flight','departure_time','arrival_time',  )
+    list_display = ('id','airline_route','passenger_per_flight','departure_time','arrival_time',  )
 
 
 @admin.register(Booking)

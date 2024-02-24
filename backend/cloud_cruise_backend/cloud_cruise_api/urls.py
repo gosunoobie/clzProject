@@ -11,5 +11,6 @@ router.register(r'city', CityViewSet, basename='city')
 router.register(r'airline_route', AirlineRouteViewSet, basename='airline_route')
 
 urlpatterns = [
+path('search-flights/', SearchFlight.as_view(), name="search"),
 path('', include(router.urls)),
 ]
