@@ -5,9 +5,6 @@ import { useJwtStore } from '../stores/jwt'
 import { notify } from '@kyvg/vue3-notification'
 
 let baseUrl = import.meta.env.VITE_BACKEND_API
-// let baseUrl = "http://localhost:8000";
-// let baseUrl = "https://dev.tripturbo.com";
-let hotelBaseUrl = 'https://dev.tripturbo.com/'
 if (!baseUrl || baseUrl == '/') {
   baseUrl = ''
 }
