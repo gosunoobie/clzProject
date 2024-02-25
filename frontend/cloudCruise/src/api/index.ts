@@ -9,31 +9,11 @@ if (!baseUrl || baseUrl == '/') {
   baseUrl = ''
 }
 
-export const hotelApi = axios.create({
-  baseURL: `${hotelBaseUrl}/`
-})
 export const baseURL = baseUrl
 
 export const api = axios.create({
   baseURL: `${baseUrl}/`
 })
-
-// export const form = axios.create({
-//   baseURL: `${baseUrl}/`,
-// });
-
-// api.interceptors.request.use(
-//   (config) => {
-//     const JwtStore = useJwtStore();
-//     if (JwtStore.AccessToken) {
-//       config.headers.authorization = "Bearer " + JwtStore.AccessToken;
-//     }
-//     return config;
-//   },
-//   (err) => {
-//     return Promise.reject(err);
-//   }
-// );
 
 export function JwtExpired(): boolean {
   const JwtStore = useJwtStore()
