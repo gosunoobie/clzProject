@@ -301,7 +301,7 @@ import { useHomeStore } from '../../stores/homeStore.ts'
 import { useRoute } from 'vue-router'
 import CloudCruiseLogo from '/logo.png'
 
-const navChangingRoutes = ['Home', 'About', 'Blog', 'FlightList', 'Activities', 'Hotels']
+const navChangingRoutes = ['About', 'Blog', 'FlightList', 'Activities', 'Hotels']
 const currentRouteName = ref('')
 const isAllowedNavChangingRoute = ref(true)
 const route = useRoute()
@@ -393,10 +393,6 @@ function toggleDropdown() {
 
 function toggleResponsiveDropdown() {
   responsiveDropdown.value = !responsiveDropdown.value
-}
-
-const clickAwayFunc = () => {
-  dropdown.value = false
 }
 
 const clickAwayResponsiveFunc = () => {

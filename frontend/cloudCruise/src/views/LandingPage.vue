@@ -1,6 +1,6 @@
 <template>
   <div class="[w-100vw] overflow-x-hidden mt-0 md:mt-[100px]">
-    <section
+    <!-- <section
       class="flex gap-2 xl:gap-6 mx-auto w-full md:w-[90%] lg:w-auto flex-col-reverse md:flex-row md:mx-[40px] xl:mx-[100px] 2xl:mx-[7.5%] mb-4"
     >
       <article class="">
@@ -93,23 +93,8 @@
           />
         </aside>
       </article>
-    </section>
+    </section> -->
 
-    <section
-      class="relative w-full h-[140px] md:h-[170px] lg:h-[200px] xl:h-[230px] overflow-x-hidden z-9"
-    >
-      <aside class="absolute bottom-0 z-10 w-full h-5 bg-white"></aside>
-      <article class="flex justify-start animate-marquee">
-        <aside
-          class="min-w-full h-[140px] md:h-[170px] lg:h-[200px] bg-no-repeat xl:h-[230px] bg-cover bg-center"
-          :style="`background-image:url('${banner}')`"
-        ></aside>
-        <aside
-          class="min-w-full h-[140px] md:h-[170px] lg:h-[200px] bg-no-repeat xl:h-[230px] bg-cover bg-center"
-          :style="`background-image:url('${banner}')`"
-        ></aside>
-      </article>
-    </section>
     <section
       class="flex flex-col md:flex-row justify-between w-full md:w-[87.5%] lg:w-[85%] xl:w-[80%] pt-[20px] lg:pt-[50px] xl:pt-[80px] mb-0 xl:mb-10 mx-auto group"
     >
@@ -169,17 +154,32 @@
             data-aos="fade-left"
             class="text-black font-normal text-[30px] xs:text-[36px] xsm:text-[60px] lg:text-[75px] xl:text-[90px] font-[''Roboto] leading-[1.15] my-4 xs:mb-5"
           >
-            Making Travel Simple
+            Making Flight Simple
           </h2>
           <p
             data-aos="fade-left"
             class="font-['Poppins'] text-sm xs:text-[18px] lg:text-[24px] xl:text-[30px] font-normal"
           >
-            a
-            <span class="font-bold leading-normal text-primary-400"> ONE-STOP-SHOP for travel </span
-            >products and services
+            <span class="font-bold leading-normal text-primary-400"> Skybound Excellence, </span>
+            Grounded in Service
           </p>
         </aside>
+      </article>
+    </section>
+
+    <section
+      class="relative w-full h-[140px] md:h-[170px] lg:h-[200px] xl:h-[230px] overflow-x-hidden z-9"
+    >
+      <aside class="absolute bottom-0 z-10 w-full h-5 bg-white"></aside>
+      <article class="flex justify-start animate-marquee">
+        <aside
+          class="min-w-full h-[140px] md:h-[170px] lg:h-[200px] bg-no-repeat xl:h-[230px] bg-cover bg-center"
+          :style="`background-image:url('${banner}')`"
+        ></aside>
+        <aside
+          class="min-w-full h-[140px] md:h-[170px] lg:h-[200px] bg-no-repeat xl:h-[230px] bg-cover bg-center"
+          :style="`background-image:url('${banner}')`"
+        ></aside>
       </article>
     </section>
     <section

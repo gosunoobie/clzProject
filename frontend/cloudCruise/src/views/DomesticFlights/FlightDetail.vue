@@ -1,5 +1,5 @@
 <template>
-  <div class="font-['Poppins']">
+  <div class="font-['Poppins'] min-h-[100vh]">
     <n-modal v-model:show="showExpireModal">
       <n-card
         style="width: 600px"

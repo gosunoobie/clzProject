@@ -52,6 +52,7 @@ const newFlightStore = useNewFlightStore()
 }
 
 .reserving-div {
+  top: 0;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
@@ -60,7 +61,7 @@ const newFlightStore = useNewFlightStore()
   overflow: hidden;
   place-items: center;
   text-align: center;
-  z-index: 20;
+  z-index: 200;
   backdrop-filter: blur(4px);
   transition: 0.2s ease-in-out;
 }
