@@ -108,16 +108,16 @@ const { data } = props
           class="flight-details-left gap-[4px] mxs:gap-[6px] xsm:gap-[10px] ml-0 mxs:ml-1 xsm:ml-[1rem]"
         >
           <!-- <img :src="data.AirlineLogo" class="airline-logo h-[24px] sm:h-[30px]" /> -->
-          <img :src="getAirlineLogoUrl(data.Airline)" class="airline-logo h-[24px] sm:h-[30px]" />
+          <img :src="getAirlineLogoUrl(data.airline)" class="airline-logo h-[24px] sm:h-[30px]" />
           <!-- 
           <div class="h-[30px] w-[30px] sm:h-[40px] sm:w-[40px] bg-no-repeat bg-center bg-contain rounded-[50%] "  :style="`background-image: url('http://usbooking.org/us/apiImages/${data.Airline}') !important`" >
 
           </div> -->
           <p class="text-sm font-semibold xsm:text-base md:text-xl w-[65px] xs:w-auto">
-            {{ data.AirlineName }}
+            {{ data.airlineName }}
           </p>
           <p class="text-[10px] font-medium md:font-normal md:text-xs text-[#EA2127]">
-            {{ data.FlightNo }}
+            {{ data.flightNo }}
           </p>
           <!-- Date: {{ data.FlightDate }} -->
         </div>
@@ -221,21 +221,21 @@ const { data } = props
       <div class="flex flex-col gap-[2px] text-xs font-bold md:text-sm 2xl:text-base">
         <s class="old-price" v-if="data.discountAmount > 0"
           >{{ data.currency }}
-          <!--           {{ data.totalPrice.toLocaleString('en-IN') }} -->
+          {{ data.totalPrice.toLocaleString('en-IN') }}
           {{}}
         </s>
         <p class="new-price">
           {{ data.currency }}
-          <!--           {{ data.totalCommissionedCost.toLocaleString('en-IN') }} -->
+          {{ data.totalCommissionedCost.toLocaleString('en-IN') }}
         </p>
       </div>
       <aside class="flex items-end my-[3px] xs:my-1 sm:my-[6px]">
         <div class="flex items-center justify-center gap-[6px] lg:gap-[10px] pb-[6px]">
-          <img
+          <!-- <img
             :src="CoinImg"
             alt=""
             class="h-[14px] w-[14px] sm:h-[18px] sm:w-[18px] lg:h-[20px] lg:w-[20px]"
-          />
+          /> -->
           <!-- <p class="text-[10px] font-semibold xs:text-xs">
             {{ data.rewardCoins }}
           </p> -->

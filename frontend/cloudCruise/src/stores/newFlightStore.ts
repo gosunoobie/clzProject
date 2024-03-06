@@ -286,8 +286,8 @@ export const useNewFlightStore = defineStore('newFlightStore', {
         const res = await postAPI('search-flights', this.flightSearchPayload)
         this.departureFlightLists = res.data.flightsData
         for (let flight of this.departureFlightLists) {
-          if (!this.departureFlightAirlines.includes(flight.AirlineName)) {
-            this.departureFlightAirlines.push(flight.AirlineName)
+          if (!this.departureFlightAirlines.includes(flight.airlineName)) {
+            this.departureFlightAirlines.push(flight.airlineName)
           }
         }
         this.isFlightsSearched = true

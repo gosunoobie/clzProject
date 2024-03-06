@@ -7,7 +7,7 @@
   >
     <header class="flex justify-between w-full bg-[#8a020d] rounded-[8px] px-5 py-[13px] mb-[5px]">
       <aside class="font-semibold text-sm lg:text-base text-white">
-        {{ newFlightStore.flightSearchPayload.originlocationcode }} -
+        {{ newFlightStore.flightSearchPayload.originLocationCode }} -
         {{ newFlightStore.flightSearchPayload.destinationLocationCode }}
       </aside>
       <aside class="flex items-center gap-3">
