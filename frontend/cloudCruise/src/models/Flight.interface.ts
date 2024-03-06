@@ -3,7 +3,7 @@ export interface FlightSearchPayload {
   childPassenger: number
   departureDate: string | null
   destinationLocationCode: string | null
-  originLoactionCode: string | null
+  originLocationCode: string | null
   nationality: string
   seatClass: string
   returnFlight: boolean
@@ -19,81 +19,81 @@ export interface SectorCode {
   label: string
 }
 export interface FlightComponentDetails {
-  Airline: string
-  AirlineLogo: string
-  FlightDate: Date
-  FlightNo: string
-  Departure: string
-  DepartureTime: string
-  Arrival: string
-  ArrivalTime: string
-  AircraftType: string
-  Adult: string
-  Child: string
-  Infant: string
-  FlightId: string
-  FlightClassCode: string
-  Currency: string
-  AdultFare: string
-  ChildFare: string
-  InfantFare: string
-  ResFare: string
-  FuelSurcharge: string
-  Tax: string
-  AdultVAT: string
-  ChildVAT: string
-  Refundable: string
-  FreeBaggage: string
-  AgencyCommission: string
-  ChildCommission: string
-  elpasedTime: string
+  airline: string
+  airlineLogo: string
+  flightDate: Date
+  flightNo: string
+  departure: string
+  departureTime: string
+  arrival: string
+  arrivalTime: string
+  aircraftType: string
+  adult: string
+  child: string
+  infant: string
+  flightId: string
+  flightClassCode: string
+  currency: string
+  adultFare: string
+  childFare: string
+  infantFare: string
+  resFare: string
+  fuelSurcharge: string
+  tax: string
+  adultVAT: string
+  childVAT: string
+  refundable: string
+  freeBaggage: string
+  agencyCommission: string
+  childCommission: string
+  elapsedTime: string
   timeUnit: string
   arrivalCode: string
   departureCode: string
-  AirlineName: string
-  TotalPeople: number
+  airlineName: string
+  totalPeople: number
   totalCommissionedCost: number
-  TotalPrice: number
-  DiscountAmount: number
+  totalPrice: number
+  discountAmount: number
   discountFor: string
-  RewardCoins: number
+  rewardCoins: number
 }
 
 export interface FlightList {
-  Airline: string
-  AirlineLogo: string
-  FlightDate: string
-  FlightNo: string
-  Departure: string
-  DepartureTime: string
-  Arrival: string
-  ArrivalTime: string
-  AircraftType: string
-  Adult: string | null
-  Child: string | null
-  Infant: string
-  FlightId: string
-  FlightClassCode: string
-  Currency: string
-  AdultFare: string
-  ChildFare: string
-  InfantFare: string
-  ResFare: string
-  FuelSurcharge: string
-  Tax: string
-  Refundable: string
-  FreeBaggage: string
-  AgencyCommission: string
-  ChildCommission: string
-  elpasedTime: string
+  airline: string
+  airlineLogo: string
+  flightDate: string
+  flightNo: string
+  departure: string
+  departureTime: string
+  arrival: string
+  arrivalTime: string
+  aircraftType: string
+  adult: string | null
+  child: string | null
+  infant: string
+  flightId: string
+  flightClassCode: string
+  currency: string
+  adultFare: string
+  childFare: string
+  infantFare: string
+  resFare: string
+  fuelSurcharge: string
+  tax: string
+  refundable: string
+  freeBaggage: string
+  agencyCommission: string
+  childCommission: string
+  elapsedTime: string
   timeUnit: string
   arrivalCode: string
   departureCode: string
-  AirlineName: string
-  TotalPeople: number
+  airlineName: string
+  totalPeople: number
   totalCommissionedCost: number
-  TotalPrice: number
-  DiscountAmount: number
+  totalPrice: number
+  discountAmount: number
   duration?: number
 }
 

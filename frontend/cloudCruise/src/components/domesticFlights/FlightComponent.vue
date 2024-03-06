@@ -76,9 +76,9 @@ const selectFlight = (flight: FlightList) => {
 const isSelected = computed(() => {
   if (props.showColor) {
     return [
-      newFlightStore.selectedFlight?.departureFlight?.FlightId,
-      newFlightStore.selectedFlight?.returnFlight?.FlightId
-    ].includes(data.FlightId)
+      newFlightStore.selectedFlight?.departureFlight?.flightId,
+      newFlightStore.selectedFlight?.returnFlight?.flightId
+    ].includes(data.flightId)
   }
   return false
 })
@@ -123,7 +123,7 @@ const { data } = props
         </div>
         <div class="flight-details-right !font-['Roboto']">
           <p
-            v-if="data.Refundable === 'T'"
+            v-if="data.refundable === 'T'"
             class="text-[10px] text-right xxs:text-xs refundable md:text-sm mr-[10px] mxs:mr-[39px] xsm:mr-[45px]"
           >
             Refundable
@@ -140,10 +140,10 @@ const { data } = props
         <div class="arrival-departure ml-1 xxs:ml-2 xsm:ml-[2rem]">
           <div class="departure">
             <p class="text-sm font-semibold sm:text-base md:text-xl departure-time">
-              {{ data.DepartureTime }}
+              {{ data.departureTime }}
             </p>
             <p class="hidden text-xs font-semibold sm:text-sm sm:block">
-              {{ data.Departure }}
+              {{ data.departure }}
             </p>
             <p class="block text-xs font-semibold sm:text-sm sm:hidden">
               {{ data.departureCode }}
@@ -157,10 +157,10 @@ const { data } = props
           />
           <div class="arrival">
             <p class="text-sm font-semibold sm:text-base md:text-xl">
-              {{ data.ArrivalTime }}
+              {{ data.arrivalTime }}
             </p>
             <p class="hidden text-xs font-semibold sm:text-sm 2xl:text-base sm:block">
-              {{ data.Arrival }}
+              {{ data.arrival }}
             </p>
             <p class="block text-xs font-semibold sm:text-sm 2xl:text-base sm:hidden">
               {{ data.arrivalCode }}
@@ -171,21 +171,21 @@ const { data } = props
           <p>Duration</p>
           <div class="bottom-details-static">
             <img :src="Clock" alt="" class="!h-[12px] xxs:!h-[15px]" />
-            <p>{{ data.elpasedTime }} min</p>
+            <p>{{ data.elapsedTime }} min</p>
           </div>
         </div>
         <div class="hidden text-xs sm:flex md:text-sm luggage bottom-details 2xl:text-base">
           <p>Luggage</p>
           <div class="bottom-details-static">
             <img :src="Luggage" alt="" class="!h-[12px] xxs:!h-[15px]" />
-            <p>{{ data.FreeBaggage }} KG</p>
+            <p>{{ data.freeBaggage }} KG</p>
           </div>
         </div>
         <div class="hidden text-xs sm:flex md:text-sm seat-class bottom-details 2xl:text-base">
           <p>Class</p>
           <div class="bottom-details-static">
             <img :src="SeatClass" alt="" class="!h-[12px] xxs:!h-[15px]" />
-            <p>{{ data.FlightClassCode }}</p>
+            <p>{{ data.flightClassCode }}</p>
           </div>
         </div>
 
@@ -197,15 +197,13 @@ const { data } = props
           >
             <div class="bottom-details-static">
               <img :src="Clock" alt="" class="!h-[12px] xxs:!h-[15px]" />
-              <p>{{ data.elpasedTime }} min</p>
+              <p>{{ data.elapsedTime }} min</p>
             </div>
           </div>
           <div class="flex text-[10px] sm:text-xs md:text-sm luggage bottom-details 2xl:text-base">
             <div class="bottom-details-static">
               <img :src="Luggage" alt="" class="!h-[12px] xxs:!h-[15px]" />
-              <p>
-                {{ data.FreeBaggage.includes('KG') ? data.FreeBaggage : `${data.FreeBaggage} KG` }}
-              </p>
+              <p>Kg</p>
             </div>
           </div>
           <div
@@ -213,7 +211,7 @@ const { data } = props
           >
             <div class="bottom-details-static">
               <img :src="SeatClass" alt="" class="!h-[12px] xxs:!h-[15px]" />
-              <p>class {{ data.FlightClassCode }}</p>
+              <p>class {{ data.flightClassCode }}</p>
             </div>
           </div>
         </div>
@@ -221,12 +219,14 @@ const { data } = props
     </div>
     <div class="pricing-details ml-2 sm:ml-[15px]">
       <div class="flex flex-col gap-[2px] text-xs font-bold md:text-sm 2xl:text-base">
-        <s class="old-price" v-if="data.DiscountAmount > 0"
-          >{{ data.Currency }} {{ data.TotalPrice.toLocaleString('en-IN') }}</s
-        >
+        <s class="old-price" v-if="data.discountAmount > 0"
+          >{{ data.currency }}
+          <!--           {{ data.totalPrice.toLocaleString('en-IN') }} -->
+          {{}}
+        </s>
         <p class="new-price">
-          {{ data.Currency }}
-          {{ data.totalCommissionedCost.toLocaleString('en-IN') }}
+          {{ data.currency }}
+          <!--           {{ data.totalCommissionedCost.toLocaleString('en-IN') }} -->
         </p>
       </div>
       <aside class="flex items-end my-[3px] xs:my-1 sm:my-[6px]">
@@ -236,9 +236,9 @@ const { data } = props
             alt=""
             class="h-[14px] w-[14px] sm:h-[18px] sm:w-[18px] lg:h-[20px] lg:w-[20px]"
           />
-          <p class="text-[10px] font-semibold xs:text-xs">
-            {{ data.RewardCoins }}
-          </p>
+          <!-- <p class="text-[10px] font-semibold xs:text-xs">
+            {{ data.rewardCoins }}
+          </p> -->
         </div>
       </aside>
 
@@ -248,7 +248,7 @@ const { data } = props
         @click="
           () => {
             jwtStore.isLoggedIn
-              ? newFlightStore.reserveFlight(`${data.FlightId}`)
+              ? newFlightStore.reserveFlight(`${data.flightId}`)
               : (jwtStore.showSignInModel.value = true)
           }
         "

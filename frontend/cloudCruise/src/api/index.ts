@@ -12,7 +12,7 @@ if (!baseUrl || baseUrl == '/') {
 export const baseURL = baseUrl
 
 export const api = axios.create({
-  baseURL: `${baseUrl}/`
+  baseURL: `${baseUrl}/api/`
 })
 
 export function JwtExpired(): boolean {

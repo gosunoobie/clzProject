@@ -59,7 +59,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
         departureDate: new Date().toISOString().slice(0, 10),
         destinationLocationCode: '',
         nationality: 'NP',
-        originLoactionCode: '',
+        originLocationCode: '',
         seatClass: 'E',
         returnFlight: false
       },
@@ -227,7 +227,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
   actions: {
     setOriginLocationCode(code) {
       try {
-        this.flightSearchPayload.originLoactionCode = code
+        this.flightSearchPayload.originLocationCode = code
       } catch (error) {
         console.log(error)
       }
@@ -283,7 +283,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
         this.isFlightsLoading = true
         this.flightSearchPayload.departureDate = this.inputDepartureDate
         this.selectedFlight = {}
-        const res = await postAPI('domestic/search', this.flightSearchPayload)
+        const res = await postAPI('search-flights', this.flightSearchPayload)
         this.departureFlightLists = res.data.flightsData
         for (let flight of this.departureFlightLists) {
           if (!this.departureFlightAirlines.includes(flight.AirlineName)) {
@@ -301,9 +301,9 @@ export const useNewFlightStore = defineStore('newFlightStore', {
       try {
         const returnFlightPayload = { ...this.flightSearchPayload }
         returnFlightPayload.departureDate = this.returnDate
-        returnFlightPayload.destinationLocationCode = this.flightSearchPayload.originLoactionCode
-        returnFlightPayload.originLoactionCode = this.flightSearchPayload.destinationLocationCode
-        const res = await postAPI('domestic/search', returnFlightPayload)
+        returnFlightPayload.destinationLocationCode = this.flightSearchPayload.originLocationCode
+        returnFlightPayload.originLocationCode = this.flightSearchPayload.destinationLocationCode
+        const res = await postAPI('search-flights', returnFlightPayload)
         this.returnFlightLists = res.data.flightsData
         for (let flight of this.returnFlightLists) {
           if (!this.returnFlightAirlines.includes(flight.AirlineName)) {
