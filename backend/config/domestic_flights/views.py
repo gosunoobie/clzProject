@@ -25,14 +25,16 @@ class SearchFlight(APIView):
         return Response("this is the response")
 
     def post(self,request):
-        no_of_adults = request.data.get("adult_passenger")
-        no_of_children = request.data.get("child_passanger")
-        origin_city = request.data.get("origin_location_code")
-        destination_city = request.data.get("destination_location_code")
         serializer = SearchFlightSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        no_of_adults = serializer.validated_data.get("adult_passenger")
+        no_of_children = serializer.validated_data.get("child_passenger")
+        origin_city = serializer.validated_data.get("origin_location_code")
+        destination_city = serializer.validated_data.get("destination_location_code")
         schedules = AirlineSchedule.objects.filter(airline_route__arrival__city_code__iexact=origin_city, airline_route__destination__city_code__iexact=destination_city)
-        schedule_serializer = AirlineScheduleSerializer(schedules, many=True)
+        schedule_serializer = AirlineScheduleSerializer(schedules, many=True, context={
+            "no_of_adults": no_of_adults, "no_of_children": no_of_children, "departure_code": origin_city,  "arrival_code": destination_city
+        })
         data = schedule_serializer.data
         for schedule in data:
             print(schedule, 'asdfsd')

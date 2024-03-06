@@ -19,9 +19,61 @@ class AirlineRouteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AirlineScheduleSerializer(serializers.ModelSerializer):
+    total_price = serializers.SerializerMethodField() 
+    departure_code = serializers.SerializerMethodField()
+    arrival_code = serializers.SerializerMethodField()
+    total_commissioned_cost = serializers.SerializerMethodField()
+    airline_name = serializers.SerializerMethodField()
+    airline = serializers.SerializerMethodField()
+    arrival = serializers.SerializerMethodField()
+    departure = serializers.SerializerMethodField()
+    currency = serializers.SerializerMethodField()
+
     class Meta:
         model = AirlineSchedule
         fields = '__all__'
+
+    def get_total_price(self,obj):
+        no_of_adults = self.context.get("no_of_adults")
+        no_of_children = self.context.get("no_of_children")
+
+        return obj.adult_fare * no_of_adults + obj.child_fare * no_of_children
+
+    def get_departure_code(self,obj):
+        origin_city = self.context.get("departure_code")
+        return origin_city
+
+    def get_arrival_code(self,obj):
+        destination_city = self.context.get("arrival_code")
+        return destination_city
+
+    def get_total_commissioned_cost(self,obj):
+
+        no_of_adults = self.context.get("no_of_adults")
+        no_of_children = self.context.get("no_of_children")
+
+        total_price = obj.adult_fare * no_of_adults + obj.child_fare * no_of_children
+        return total_price - obj.discount_amount
+
+
+    def get_airline_name(self,obj):
+        return obj.airline_route.airline.name
+
+    def get_airline(self,obj):
+        if(obj.airline_route.airline.logo):
+            return f'http://127.0.0.1:8000/{obj.airline_route.airline.logo.url}'
+        else:
+            return None
+    def get_arrival(self,obj):
+        return obj.airline_route.arrival.city_name
+
+    def get_departure(self,obj):
+        return obj.airline_route.destination.city_name
+    def get_currency(self,obj):
+        return 'NPR' 
+
+
+
 
 class SearchFlightSerializer(serializers.Serializer):
     departure_date = serializers.DateField()
@@ -32,8 +84,6 @@ class SearchFlightSerializer(serializers.Serializer):
     adult_passenger = serializers.IntegerField(required=True)
     child_passenger = serializers.IntegerField(default=0)
     return_flight = serializers.BooleanField(default=False)
-
-
 
     def validate(self, value):
         maximum_passenger_limit = 9
