@@ -25,15 +25,25 @@ class SearchFlight(APIView):
         return Response("this is the response")
 
     def post(self,request):
-        serializer = SearchFlightSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        no_of_adults = request.data.get("adult_passenger")
+        no_of_children = request.data.get("child_passanger")
         origin_city = request.data.get("origin_location_code")
         destination_city = request.data.get("destination_location_code")
-        schedules = AirlineSchedule.objects.filter(airline_route__arrival__city_code=origin_city, airline_route__destination__city_code=destination_city)
+        serializer = SearchFlightSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        schedules = AirlineSchedule.objects.filter(airline_route__arrival__city_code__iexact=origin_city, airline_route__destination__city_code__iexact=destination_city)
         schedule_serializer = AirlineScheduleSerializer(schedules, many=True)
+        data = schedule_serializer.data
+        for schedule in data:
+            print(schedule, 'asdfsd')
 
-        print(schedules)
-        return Response(schedule_serializer.data)
+
+        return Response(
+            {
+            "flightsCount": len(data),
+            "flightsData" : data,
+            }
+                        )
 
 class BookFlight(APIView):
     def post(self,request):

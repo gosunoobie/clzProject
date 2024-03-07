@@ -37,6 +37,7 @@ class AirlineSchedule(models.Model):
     free_baggage = models.IntegerField()
     elapsed_time = models.IntegerField()
     discount_amount = models.IntegerField()
+    flight_class_code = models.CharField(max_length=10, null=True, blank=True)
 
     def __str__(self):
         return f"{self.departure_time}-{self.arrival_time}"
@@ -47,6 +48,9 @@ class AirlineSchedule(models.Model):
             return False
         else:
             return True
+
+
+
 
 class Booking(models.Model):
 

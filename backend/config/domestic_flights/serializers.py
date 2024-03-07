@@ -33,6 +33,8 @@ class SearchFlightSerializer(serializers.Serializer):
     child_passenger = serializers.IntegerField(default=0)
     return_flight = serializers.BooleanField(default=False)
 
+
+
     def validate(self, value):
         maximum_passenger_limit = 9
         today_date = date.today()
