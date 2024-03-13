@@ -10,12 +10,12 @@
     <!-- <h2>Thanks for trusting us!</h2> -->
     <NCard class="txn-info" v-if="txnInfo">
       <n-alert title="Successfully Verified Payment" type="success">
-        <!-- <CustomButton 
-          v-if="domesticTicketList.length > 0 || activityTicketList.length>0"
+        <!-- <CustomButton
+          v-if="domesticTicketList.length > 0"
           label="Download Reciept"
           color="green"
           @click="goToInvoiceUrl"
-          href = '/'
+          href="/"
         >
           <template v-slot:leftIcon>
             <Icon color="white" size="20">
@@ -24,25 +24,25 @@
           </template>
         </CustomButton> -->
 
-        <a
+        <!-- <a
           :href="txnInfo.invoiceUrl"
           class="flex items-center gap-2 p-2 text-sm font-semibold text-white bg-green-700 rounded-md cursor-pointer w-fit"
           target="_blank"
-          v-if="domesticTicketList.length > 0 || activityTicketList.length > 0"
+          v-if="domesticTicketList.length > 0"
         >
           <Newspaper class="w-5" />
           <p>Download Reciept</p>
-        </a>
+        </a> -->
       </n-alert>
 
       <NDivider />
       <NSpace class="mt-3" justify="space-between">
         <NText> Transaction ID</NText>
-        <NText> {{ txnInfo.txnId }}</NText>
+        <NText> {{ txnInfo.guid }}</NText>
       </NSpace>
       <NSpace class="mt-3" justify="space-between">
         <NText> Transaction Date</NText>
-        <NText> {{ txnInfo.dateCreated }}</NText>
+        <NText> {{ txnInfo.createdDate }}</NText>
       </NSpace>
       <NSpace class="mt-3" justify="space-between">
         <NText> Payment Method</NText>
@@ -54,7 +54,7 @@
       </NSpace>
       <NSpace class="mt-3" justify="space-between">
         <NText> Paid Amount</NText>
-        <NText> $ 1293.64</NText>
+        <NText> NPR {{ txnInfo.totalAmount }}</NText>
       </NSpace>
       <NDivider />
 
@@ -93,39 +93,6 @@
             >
               <Ticket class="w-5" />
               <p>Download Ticket : {{ ticket.firstName }} {{ ticket.lastName }}</p>
-            </a>
-          </div>
-        </NSpace>
-      </div>
-      <div v-if="activityTicketList.length > 0">
-        <NH3>Activity Tickets : </NH3>
-        <NSpace>
-          <div v-for="ticket in activityTicketList">
-            <a
-              :href="ticket.ticketUrl"
-              class="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-[#5560c3] rounded-[5px] cursor-pointer w-fit"
-              target="_blank"
-            >
-              <Ticket class="w-5" />
-              <p>Download Ticket</p>
-            </a>
-          </div>
-        </NSpace>
-      </div>
-      <div v-if="agodaHotelTicketList.length > 0">
-        <div class="my-4">
-          <h3 class="font-bold text-lg">Hotel Tickets :</h3>
-          <p>Your hotel booking is succesfull. You can download ticket from below:</p>
-        </div>
-        <NSpace>
-          <div v-for="ticket in agodaHotelTicketList">
-            <a
-              :href="ticket.ticketUrl"
-              class="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-white bg-[#5560c3] rounded-[5px] cursor-pointer w-fit"
-              target="_blank"
-            >
-              <Ticket class="w-5" />
-              <p>Download Ticket</p>
             </a>
           </div>
         </NSpace>
@@ -227,10 +194,10 @@ const ticketDownload = (ticketurl: string) => {
 const verifyKhaltiCheck = async (payload: any) => {
   try {
     verifyingTxn.value = true
-    const res = await postAPI('billing/khalti/verify_payment', payload)
+    const res = await postAPI('khalti/verify_payment', payload)
     verifyingTxn.value = false
     txnInfo.value = res.data
-    getTicketList(res.data.txnId)
+    getTicketList(res.data.guid)
   } catch (e) {
     verifyingTxn.value = false
     $router.push({
@@ -245,7 +212,7 @@ const verifyEsewaCheck = async (payload: any) => {
     const res = await postAPI('billing/esewa-web-callback', payload)
     verifyingTxn.value = false
     txnInfo.value = res.data
-    getTicketList(res.data.txnId)
+    getTicketList(res.data.guid)
   } catch (error) {
     verifyingTxn.value = false
     $router.push({
@@ -260,7 +227,7 @@ const verifyHBLCheck = async (payload: any) => {
     const res = await getAPI(`billing/hbl-callback-verify`, `?orderNo=${txn_id}`)
     verifyingTxn.value = false
     txnInfo.value = res.data
-    // getTicketList(res.data.txnId);
+    // getTicketList(res.data.guid);
     getTicketList(txn_id)
   } catch (error) {
     verifyingTxn.value = false
@@ -270,13 +237,14 @@ const verifyHBLCheck = async (payload: any) => {
   }
 }
 
-const getTicketList = async (txnId: any) => {
+const getTicketList = async (guid: any) => {
   generatingTicket.value = true
 
   try {
     generatingTicket.value = false
-    const res: any = await getAPI(`billing/txn-ticket-list/${txnId}`)
+    const res: any = await getAPI(`txn-ticket-list/${guid}`)
     domesticTicketList.value = res.data.domesticTickets
+    console.log(res.data)
     activityTicketList.value = res.data.activityTickets
     agodaHotelTicketList.value = res.data.hotelTickets
   } catch (error) {

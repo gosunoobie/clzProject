@@ -428,10 +428,9 @@ const options = [
       })
     }
   },
-  {
+  /* {
     label: 'My Trips',
     key: 'My Trips',
-    // icon: renderIcon("../src/assets/layout/image/booking-icon.png"),
     icon() {
       return h(NIcon, null, {
         default: () => h(SuitcaseRolling)
@@ -442,8 +441,8 @@ const options = [
         router.push('/ticket-history')
       }
     }
-  },
-  {
+  }, */
+  /* {
     label: 'TT Coin',
     key: 'TT Coin',
     icon() {
@@ -456,7 +455,7 @@ const options = [
         router.push('/tt-coins')
       }
     }
-  },
+  }, */
   {
     label: 'Transaction History',
     key: 'Transaction History',

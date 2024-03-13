@@ -42,19 +42,23 @@ const router = createRouter({
       path: '/flight-detail/:id',
       name: 'FlightDetail',
       component: () => import('../views/DomesticFlights/FlightDetail.vue')
-    }
+    },
 
+    {
+      path: '/payment-success/:provider',
+      name: 'PaymentSuccess',
+      component: () => import('../views/Payment/PaymentSuccess.vue')
+    },
     /* {
       path: '/redirect-error',
       name: 'RedirectPage',
       component: () => import('../views/RedirectPage.vue')
     }, */
-
-    /* {
+    {
       name: 'notfound',
       path: '/:pathMatch(.*)*',
       component: () => import('../views/NotFound.vue')
-    } */
+    }
   ]
 })
 

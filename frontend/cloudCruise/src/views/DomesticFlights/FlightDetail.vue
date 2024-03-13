@@ -10,12 +10,7 @@
         aria-modal="true"
       >
         <p><n-text>You will be redirected to search</n-text></p>
-        <n-countdown
-          v-if="newFlightStore.flightDetail?.flightInfo[0].duration"
-          :duration="5000"
-          :active="true"
-          :on-finish="() => $router.push('/flights')"
-        />
+        <n-countdown :duration="5000" :active="true" :on-finish="() => $router.push('/flights')" />
       </n-card>
     </n-modal>
     <n-modal v-model:show="newFlightStore.showPaymentModal">
@@ -30,16 +25,8 @@
         <NDivider />
 
         <form ref="esewaFormRef" :action="`${esewaAPIurl}/epay/main`" method="POST">
-          <input
-            :value="newFlightStore.flightDetail?.flightInfo[0].totalCommissionedCost"
-            name="tAmt"
-            type="hidden"
-          />
-          <input
-            :value="newFlightStore.flightDetail?.flightInfo[0].totalCommissionedCost"
-            name="amt"
-            type="hidden"
-          />
+          <input :value="10" name="tAmt" type="hidden" />
+          <input :value="10" name="amt" type="hidden" />
           <!--
           <input value="10" name="tAmt" type="hidden" />
           <input value="10" name="amt" type="hidden" />
@@ -63,21 +50,20 @@
         >
           <div
             @click="handleEsewaPayment"
-            v-if="newFlightStore.flightDetail.flightInfo[0].Currency === 'NPR'"
             class="bg-cover bg-no-repeat border-[#e8e8e8] rounded-md border-[1px] bg-center w-[48%] xs:w-[32%] gap-3 h-[7rem] cursor-pointer"
             :style="`background-image: url(${EsewaBox})`"
           ></div>
           <div
             @click="handleKhaltiPayment"
-            v-if="newFlightStore.flightDetail.flightInfo[0].Currency === 'NPR'"
             class="bg-cover bg-no-repeat border-[#e8e8e8] rounded-md border-[1px] bg-center w-[48%] xs:w-[32%] gap-3 h-[7rem] cursor-pointer"
             :style="`background-image: url(${KhaltiBox})`"
           ></div>
+          <!-- 
           <div
             @click="handleHBLPayment"
             class="bg-cover bg-no-repeat border-[#e8e8e8] rounded-md border-[1px] bg-center w-[48%] xs:w-[32%] gap-3 h-[7rem] cursor-pointer"
             :style="`background-image: url(${HBLBox})`"
-          ></div>
+          ></div> -->
           <!--
           <div
             @click="handleNabilPayment"
@@ -123,13 +109,18 @@
       class="main-flight-div p-0 lg:p-4 flex-col-reverse lg:flex-row w-[95%] lg:w-[97.5%] xl:w-[90%]"
     >
       <section class="left-side-detail w-full lg:w-[70%]">
-        <n-tag v-if="newFlightStore.flightDetail?.flightInfo[0].duration" :bordered="false">
+        <!-- <n-tag v-if="newFlightStore.flightDetail?.flightInfo[0].duration" :bordered="false">
           Book within
           <n-countdown
             :duration="newFlightStore.flightDetail.flightInfo[0].duration"
             :active="true"
             :on-finish="() => reserveExpire()"
           />
+        </n-tag> -->
+
+        <n-tag :bordered="false">
+          Book within
+          <n-countdown :duration="360000" :active="true" :on-finish="() => reserveExpire()" />
         </n-tag>
         <n-form v-if="newFlightStore.bookingDetail">
           <FlightComponent
@@ -139,7 +130,6 @@
             :show-color="false"
             :key="flight.FlightId"
           />
-          <!-- {{ newFlightStore.flightDetail }} -->
           <n-card class="mt-3 primary-border" title="Contact Detail *">
             <n-grid x-gap="10" cols="1 s:2 m:2 l:2" :y-gap="0" responsive="screen">
               <n-gi>
@@ -300,7 +290,7 @@
             <CustomButton
               v-else
               label="Create Booking "
-              :onClickFunction="createBooking"
+              :onClickFunction="submitBookingDetails"
               color="#ea2127"
               size="lg"
               icon-size="20"
@@ -552,7 +542,7 @@ const createBookingPayload: Ref<FlightBookingPayload> = ref({
   bookings: []
 })
 
-const createBooking = () => {
+/* const createBooking = () => {
   if (accept_toc.value === false) {
     notify({
       text: 'Please Accept Our Terms & Conditions',
@@ -589,11 +579,13 @@ const createBooking = () => {
       duration: 4000
     })
   } else {
-    // hit create booking api
-    newFlightStore.createBooking(createBookingPayload.value)
+    newFlightStore.addPassengerInfo()
   }
 
-  // createBookingPayload.value.bookings=[]
+} */
+
+const submitBookingDetails = () => {
+  newFlightStore.addPassengerInfo(createBookingPayload.value, Number($route.params.id))
 }
 
 const reserveExpire = () => {
@@ -641,7 +633,7 @@ const handleEsewaPayment = () => {
 const handleKhaltiPayment = async () => {
   try {
     newFlightStore.loadingScreen = true
-    await postAPI('billing/khalti/inititiate_payment', {
+    await postAPI('khalti/inititiate_payment', {
       txn_id: newFlightStore.paymentTxnId
     }).then((res) => {
       newFlightStore.loadingScreen = false

@@ -35,31 +35,6 @@ export const useJwtStore = defineStore('jwt', {
     },
     async getJWT(user: UserLoginInfo) {
       const detail = (await API.getJWT(user)) as JWT
-      if (detail.data.user.emailVerified === false) {
-        this.registerUserId = detail.data.user.id
-        // router.push(`/verify-otp/${detail.data.user.id}`);
-        router.push({
-          name: 'VerifyEmail',
-          params: { id: detail.data.user.id }
-        })
-        return
-      }
-      console.log(detail.data.user)
-      if (detail.data.user.nationality === null || detail.data.user.nationality === '') {
-        router.push({
-          name: 'SelectCountry',
-          params: { id: detail.data.user.id }
-        })
-        return
-      }
-      if (detail.data.user.phoneVerified === false && detail.data.user.nationality === 'Nepal') {
-        this.registerUserId = detail.data.user.id
-        router.push({
-          name: 'VerifyOTP',
-          params: { id: detail.data.user.id }
-        })
-        return
-      }
 
       this.AccessToken = detail.data.access
       this.registerUserId = detail.data.user.id
@@ -91,36 +66,6 @@ export const useJwtStore = defineStore('jwt', {
       this.UserDetail = detail.data.user
       this.RefreshingToken = false
       this.registerUserId = detail.data.user.id
-      if (detail.data.user.accountProvider === 'Tripturbo') return
-
-      if (
-        detail.data.user.nationality === '' ||
-        detail.data.user.nationality === null ||
-        !detail.data.user.nationality
-      ) {
-        router.push({
-          name: 'SelectCountry',
-          params: { id: detail.data.user.id }
-        })
-        return
-      }
-
-      if (detail.data.user.nationality === 'Nepal' && detail.data.user.phoneVerified === false) {
-        // router.push(`verify-otp/${detail.data.user.id}`);
-        router.push({
-          name: 'VerifyOTP',
-          params: { id: detail.data.user.id }
-        })
-        return
-      }
-
-      if (detail.data.user.phoneVerified) {
-        return
-      }
-
-      if (detail.data.user.nationality !== 'Nepal') {
-        return
-      }
     },
 
     // async refreshSocialAccessToken(){

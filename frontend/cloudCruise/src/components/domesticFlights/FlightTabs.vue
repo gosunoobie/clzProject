@@ -45,19 +45,22 @@
         Return Flights
       </button>
     </div>
-    <article class="flex flex-col w-full">
-      <FlightComponent
-        v-if="!newFlightStore.isShowingReturnFlights"
-        :data="flight"
-        :key="flight.FlightId"
-        v-for="flight in newFlightStore.getFilteredDepartureFlights"
-      />
-      <FlightComponent
-        v-if="newFlightStore.isShowingReturnFlights"
-        :data="flight"
-        :key="flight.FlightId"
-        v-for="flight in newFlightStore.getFilteredReturnFlights"
-      />
+    <article class="w-full">
+      <div class="flex flex-col w-full" v-if="!newFlightStore.isShowingReturnFlights">
+        <FlightComponent
+          :data="flight"
+          :key="flight.id"
+          v-for="flight in newFlightStore.getFilteredDepartureFlights"
+        />
+      </div>
+
+      <div class="flex flex-col w-full" v-else>
+        <FlightComponent
+          :data="flight"
+          :key="flight.id"
+          v-for="flight in newFlightStore.getFilteredReturnFlights"
+        />
+      </div>
       <div
         class="w-full bg-white flex flex-col gap-5 no-flights-box-shadow justify-center items-center rounded-[20px] h-[310px] xs:h-[400px] md:h-[475px] my-3"
         v-if="

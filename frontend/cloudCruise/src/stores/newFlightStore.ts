@@ -116,6 +116,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
       paymentTxnId: null,
       selectedBillingAddress: null,
       billingList: [] as BillingListModel[],
+      flightBookingResponse: null,
       loadingScreen: false
     }
   },
@@ -161,12 +162,12 @@ export const useNewFlightStore = defineStore('newFlightStore', {
     getFilteredReturnFlights(state) {
       const airlinesFilteredFlights = state.returnFlightLists.filter(
         (flight: FlightComponentDetails) =>
-          state.selectedAirlinesFilter.includes(flight.AirlineName)
+          state.selectedAirlinesFilter.includes(flight.airlineName)
       )
       const validAirlinesFilteredFlights =
         airlinesFilteredFlights.length > 0 ? airlinesFilteredFlights : state.returnFlightLists
       const ticketTypeFilteredFlights = validAirlinesFilteredFlights.filter(
-        (flight) => flight.Refundable === state.selectedTicketTypeFilter
+        (flight) => flight.refundable === (state.selectedTicketTypeFilter === 'T')
       )
       const validTicketTypeFilteredFlights =
         state.selectedTicketTypeFilter.length > 0
@@ -175,13 +176,13 @@ export const useNewFlightStore = defineStore('newFlightStore', {
 
       const priceSortedFlightLists = [...validTicketTypeFilteredFlights].sort((flightA, flightB) =>
         state.selectedTicketPricesFilter === 'H'
-          ? flightB.TotalPrice - flightA.TotalPrice
-          : flightA.TotalPrice - flightB.TotalPrice
+          ? flightB.totalCommissionedCost - flightA.totalCommissionedCost
+          : flightA.totalCommissionedCost - flightB.totalCommissionedCost
       )
       const durationSortedFlightLists = [...priceSortedFlightLists].sort((flightA, flightB) =>
         state.selectedDurationTypeFilter === 'L'
-          ? parseInt(flightB.elpasedTime) - parseInt(flightA.elpasedTime)
-          : parseInt(flightA.elpasedTime) - parseInt(flightB.elpasedTime)
+          ? parseInt(flightB.elapsedTime) - parseInt(flightA.elapsedTime)
+          : parseInt(flightA.elapsedTime) - parseInt(flightB.elapsedTime)
       )
       if (state.selectedDurationTypeFilter.length > 0) return durationSortedFlightLists
       return priceSortedFlightLists
@@ -189,12 +190,12 @@ export const useNewFlightStore = defineStore('newFlightStore', {
     getFilteredDepartureFlights(state) {
       const airlinesFilteredFlights = state.departureFlightLists.filter(
         (flight: FlightComponentDetails) =>
-          state.selectedAirlinesFilter.includes(flight.AirlineName)
+          state.selectedAirlinesFilter.includes(flight.airlineName)
       )
       const validAirlinesFilteredFlights =
         airlinesFilteredFlights.length > 0 ? airlinesFilteredFlights : state.departureFlightLists
       const ticketTypeFilteredFlights = validAirlinesFilteredFlights.filter(
-        (flight) => flight.Refundable === state.selectedTicketTypeFilter
+        (flight) => flight.refundable === (state.selectedTicketTypeFilter === 'T')
       )
       const validTicketTypeFilteredFlights =
         state.selectedTicketTypeFilter.length > 0
@@ -203,13 +204,14 @@ export const useNewFlightStore = defineStore('newFlightStore', {
 
       const priceSortedFlightLists = [...validTicketTypeFilteredFlights].sort((flightA, flightB) =>
         state.selectedTicketPricesFilter === 'H'
-          ? flightB.TotalPrice - flightA.TotalPrice
-          : flightA.TotalPrice - flightB.TotalPrice
+          ? flightB.totalCommissionedCost - flightA.totalCommissionedCost
+          : flightA.totalCommissionedCost - flightB.totalCommissionedCost
       )
+
       const durationSortedFlightLists = [...priceSortedFlightLists].sort((flightA, flightB) =>
         state.selectedDurationTypeFilter === 'L'
-          ? parseInt(flightB.elpasedTime) - parseInt(flightA.elpasedTime)
-          : parseInt(flightA.elpasedTime) - parseInt(flightB.elpasedTime)
+          ? parseInt(flightB.elapsedTime) - parseInt(flightA.elapsedTime)
+          : parseInt(flightA.elapsedTime) - parseInt(flightB.elapsedTime)
       )
       if (state.selectedDurationTypeFilter.length > 0) return durationSortedFlightLists
       return priceSortedFlightLists
@@ -307,8 +309,8 @@ export const useNewFlightStore = defineStore('newFlightStore', {
         const res = await postAPI('search-flights', returnFlightPayload)
         this.returnFlightLists = res.data.flightsData
         for (let flight of this.returnFlightLists) {
-          if (!this.returnFlightAirlines.includes(flight.AirlineName)) {
-            this.returnFlightAirlines.push(flight.AirlineName)
+          if (!this.returnFlightAirlines.includes(flight.airlineName)) {
+            this.returnFlightAirlines.push(flight.airlineName)
           }
         }
         this.isFlightsLoading = false
@@ -389,7 +391,6 @@ export const useNewFlightStore = defineStore('newFlightStore', {
       try {
         this.reservingFlight = true
         const { id, noOfAdults, noOfChild } = bookingPayload
-        console.log(bookingPayload)
         const res = await postAPI('book-flights', {
           schedule: id,
           noOfAdults: noOfAdults,
@@ -428,25 +429,59 @@ scheduleId: res.data.schedule,
           })
         }
 
-        console.log(noOfChild, noOfAdults, this.passengerForm)
         this.reservingFlight = false
 
         router.push(`/flight-detail/${res.data.schedule}`)
       } catch (error) {
         this.reservingFlight = false
       }
+    },
+    async addPassengerInfo(bookingPayload) {
+      this.creatingBooking = true
+      const { contactName, contactEmail, contactMobile } = bookingPayload
+      const tempAdult = this.passengerForm.adult.map((passenger) => {
+        return {
+          firstName: passenger.first_name,
+          lastName: passenger.last_name,
+          nationality: passenger.nationality,
+          ageGroup: passenger.passenger_type,
+          booking: this.bookingDetail.id
+        }
+      })
+      const tempChild = this.passengerForm.child.map((passenger) => {
+        return {
+          firstName: passenger.first_name,
+          lastName: passenger.last_name,
+          nationality: passenger.nationality,
+          ageGroup: passenger.passenger_type,
+          booking: this.bookingDetail.id
+        }
+      })
+      const passengers = [...tempAdult, ...tempChild]
+      try {
+        const res = await postAPI('passenger-info', {
+          contactName,
+          contactEmail,
+          contactMobile,
+          passengers,
+          booking_id: this.bookingDetail.id
+        })
+        this.flightBookingResponse = res.data
+        this.paymentTxnId = res.data.txnId
+        this.showPaymentModal = true
+        this.creatingBooking = false
+      } catch (error) {
+        this.creatingBooking = false
+      }
     }
     /* async createBooking(bookingPayload: FlightBookingPayload) {
       bookingPayload.billing_address = this.selectedBillingAddress
 
       try {
-        this.creatingBooking = true
         const res = await postAPI('domestic/create-domestic-booking', bookingPayload)
         this.paymentTxnId = res.data[0].txnId
         this.creatingBooking = false
-        this.showPaymentModal = true
       } catch (error) {
-        this.creatingBooking = false
       }
     } */
   }

@@ -430,8 +430,6 @@ async function registerUser() {
   console.log(registerData)
   let data = await postAPI('users/auth', registerData.value)
   jwtStore.registerUserId = data.data.id
-  if (registerData.value.nationality === 'Nepal') $router.push(`/verify-otp/${data.data.id}`)
-  else $router.push(`/verify-email/${data.data.id}`)
   emit('closeModal')
 }
 const rules = {

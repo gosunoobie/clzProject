@@ -18,7 +18,7 @@
         <p
           class="inline font-normal transition-all duration-300 ease-in cursor-pointer max-w-fit links"
         >
-          Activity Policy
+          Flight Policy
         </p>
         <p
           class="inline font-normal transition-all duration-300 ease-in cursor-pointer max-w-fit links"

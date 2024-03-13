@@ -83,7 +83,7 @@ const newFlightStore = useNewFlightStore()
   transition: 0.5s ease-in-out;
 }
 .DomesticFlightsBackground {
-  background-image: url(../../assets/layout/image/flightBg.webp);
+  background-image: url(../../assets/layout/image/airplanebg.jpg);
 }
 @media screen and (max-width: 670px) {
   .DomesticFlightsBackground {

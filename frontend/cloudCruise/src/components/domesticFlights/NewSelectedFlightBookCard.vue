@@ -10,7 +10,7 @@
     >
       <article class="flex">
         <img
-          :src="getAirlineLogoUrl(selectedDeparture.Airline)"
+          :src="selectedDeparture.airline"
           class="w-[45px] xl:w-[55px] h-[32px] xl:h-[40px] mt-1 hidden md:block"
         />
 
@@ -20,12 +20,12 @@
           </h4>
           <footer class="">
             <h5 class="text-xs xl:text-sm font-medium">
-              {{ selectedDeparture.AirlineName }}
+              {{ selectedDeparture.airlineName }}
             </h5>
             <p class="text-xs xl:text-sm font-medium">
-              {{ selectedDeparture.FlightDate }}
+              {{ selectedDeparture.flightDate }}
               <span class="ml-[10px]">
-                {{ selectedDeparture.DepartureTime }}
+                {{ selectedDeparture.departureTime }}
               </span>
             </p>
           </footer>
@@ -33,29 +33,29 @@
 
         <div class="flex-col justify-between hidden sm:flex">
           <h4 class="text-primary-400 text-sm font-medium mt-1">
-            {{ selectedDeparture.FlightNo }}
+            {{ selectedDeparture.flightNo }}
           </h4>
           <h4 class="text-sm font-medium">
-            {{ selectedDeparture.Currency }}
+            {{ selectedDeparture.currency }}
             {{ new Intl.NumberFormat('en-IN', {}).format(selectedDeparture.totalCommissionedCost) }}
           </h4>
         </div>
       </article>
       <article class="flex">
         <img
-          :src="getAirlineLogoUrl(selectedReturnFlight.Airline)"
+          :src="selectedReturnFlight.airline"
           class="w-[45px] xl:w-[55px] h-[32px] xl:h-[40px] mt-1 hidden lg:block"
         />
         <div class="flex flex-col justify-between xs:ml-[15px] xs:mr-[28px]">
           <h4 class="font-bold xs:font-semibold text-sm xs:text-base xl:text-lg">Return Flight</h4>
           <footer class="">
             <h5 class="text-xs xl:text-sm font-medium">
-              {{ selectedReturnFlight.AirlineName }}
+              {{ selectedReturnFlight.airlineName }}
             </h5>
             <p class="text-xs xl:text-sm font-medium">
-              {{ selectedReturnFlight.FlightDate }}
+              {{ selectedReturnFlight.flightDate }}
               <span class="ml-[10px]">
-                {{ selectedReturnFlight.DepartureTime }}
+                {{ selectedReturnFlight.departureTime }}
               </span>
             </p>
           </footer>
@@ -63,10 +63,10 @@
 
         <div class="flex-col justify-between hidden sm:flex">
           <h4 class="text-primary-400 text-sm font-medium mt-1">
-            {{ selectedReturnFlight.FlightNo }}
+            {{ selectedReturnFlight.flightNo }}
           </h4>
           <h4 class="text-sm font-medium">
-            {{ selectedReturnFlight.Currency }}
+            {{ selectedReturnFlight.currency }}
             {{
               new Intl.NumberFormat('en-IN', {}).format(selectedReturnFlight.totalCommissionedCost)
             }}
@@ -75,7 +75,7 @@
       </article>
       <aside class="flex flex-col gap-[2px]">
         <h5 class="font-semibold text-sm xl:text-base xl:text-lg">
-          {{ selectedReturnFlight.Currency }}
+          {{ selectedReturnFlight.currency }}
           {{
             new Intl.NumberFormat('en-IN', {}).format(
               selectedDeparture.totalCommissionedCost + selectedReturnFlight.totalCommissionedCost
