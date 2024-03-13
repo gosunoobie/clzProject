@@ -22,7 +22,7 @@ const addBillingAddress = async (e: Event) => {
     message.error('Name and Address are required!')
     return
   }
-  const res = await postAPI('billing/billing-address', formValue.value)
+  const res = await postAPI('billing-address', formValue.value)
   newFlightStore.billingList.push(res.data)
   newFlightStore.selectedBillingAddress = res.data.id
   message.success('Successfully Added New Billing Address')

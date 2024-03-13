@@ -131,9 +131,9 @@
             :on-finish="() => reserveExpire()"
           />
         </n-tag>
-        <n-form v-if="newFlightStore.flightDetail">
+        <n-form v-if="newFlightStore.bookingDetail">
           <FlightComponent
-            v-for="flight in newFlightStore.flightDetail?.flightInfo"
+            v-for="flight in newFlightStore.bookingDetail?.scheduleDetail"
             :data="flight"
             :show-button="false"
             :show-color="false"
@@ -318,13 +318,13 @@
       <aside class="pricing-detail mt-[22px] w-full lg:w-[30%]">
         <div
           class="min-w-[300px] w-full mx-auto lg:ml-auto max-w-[340px]"
-          v-if="newFlightStore.flightDetail"
+          v-if="newFlightStore.bookingDetail"
         >
           <div class="price-card">
             <n-card
               class="mb-1 lg:mb-10 primary-border"
               :key="priceInfo.FlightId"
-              v-for="priceInfo in newFlightStore.flightDetail.flightInfo"
+              v-for="priceInfo in newFlightStore.bookingDetail.scheduleDetail"
             >
               <NH3 type="error" strong class="text-primary-500">Price Detail</NH3>
               <n-divider />
@@ -334,9 +334,9 @@
                   {{
                     new Intl.NumberFormat('en-IN', {
                       maximumSignificantDigits: 3
-                    }).format(priceInfo.AdultFare)
+                    }).format(priceInfo.adultFare)
                   }}
-                  X {{ priceInfo.Adult }}</NText
+                  X {{ priceInfo.noOfAdults }}</NText
                 >
               </NSpace>
               <NSpace v-if="priceInfo.Child !== '0'" class="mt-3" justify="space-between">
@@ -347,36 +347,36 @@
                       maximumSignificantDigits: 3
                     }).format(priceInfo.childFare)
                   }}
-                  X {{ priceInfo.Child }}</NText
+                  X {{ priceInfo.noOfChild }}</NText
                 >
               </NSpace>
 
-              <NSpace class="mt-3" justify="space-between">
+              <!-- <NSpace class="mt-3" justify="space-between">
                 <NText> Fuel Surchange</NText>
                 <NText>
                   {{
                     new Intl.NumberFormat('en-IN', {
                       maximumSignificantDigits: 3
-                    }).format(priceInfo.FuelSurcharge)
+                    }).format(priceInfo.fuelSurcharge)
                   }}
                   X
-                  {{ priceInfo.TotalPeople }}</NText
+                  {{ priceInfo.totalPeople }}</NText
                 >
-              </NSpace>
-              <NSpace class="mt-3" justify="space-between">
+              </NSpace> -->
+              <!-- <NSpace class="mt-3" justify="space-between">
                 <NText> Tax</NText>
                 <NText>
                   {{
                     new Intl.NumberFormat('en-IN', {
                       maximumSignificantDigits: 3
-                    }).format(priceInfo.Tax)
+                    }).format(priceInfo.tax)
                   }}
-                  X {{ priceInfo.TotalPeople }}</NText
+                  X {{ priceInfo.totalPeople }}</NText
                 >
-              </NSpace>
+              </NSpace> -->
               <NSpace class="mt-3" justify="space-between">
                 <NText> Discount</NText>
-                <NText> {{ priceInfo.DiscountAmount }}</NText>
+                <NText> {{ priceInfo.discountAmount }}</NText>
               </NSpace>
               <n-divider />
               <NSpace class="mt-3" justify="space-between">
@@ -392,7 +392,10 @@
                 </NText>
               </NSpace>
             </n-card>
-            <n-card v-if="newFlightStore.flightDetail.flightInfo.length > 1" class="primary-border">
+            <n-card
+              v-if="newFlightStore.bookingDetail.scheduleDetail.length > 1"
+              class="primary-border"
+            >
               <NSpace class="mt-3" justify="space-between">
                 <NText :strong="true"> Grand Total Amount</NText>
                 <NText :strong="true">
@@ -485,7 +488,8 @@ console.log('client id', esewaId)
 
 onMounted(() => {
   let reserveId = $route.params.id
-  newFlightStore.getFlightDetail(reserveId)
+  /*   newFlightStore.getFlightDetail(reserveId) */
+  /*   newFlightStore.getFlightDetail() */
   newFlightStore.getBillingAddress()
 })
 
@@ -496,12 +500,14 @@ onUnmounted(() => {
 })
 
 watch(
-  () => newFlightStore.flightDetail?.flightInfo,
+  () => newFlightStore.bookingDetail?.scheduleDetail,
   () => {
-    let duration = newFlightStore.flightDetail?.flightInfo[0].duration ?? 0
+    let duration = newFlightStore.bookingDetail?.scheduleDetail[0].duration ?? 0
     if (duration < 1) {
       // console.log("date expired");
-      $router.push('/flights')
+      $router.push({
+        name: 'FlightDetail'
+      })
     }
   }
 )
@@ -557,9 +563,9 @@ const createBooking = () => {
   }
 
   let bookingInfo: BookingPayload
-  if (newFlightStore?.flightDetail?.flightInfo) {
+  if (newFlightStore?.bookingDetail?.scheduleDetail) {
     createBookingPayload.value.bookings = []
-    for (let li of newFlightStore.flightDetail.flightInfo) {
+    for (let li of newFlightStore.bookingDetail.scheduleDetail) {
       bookingInfo = {
         flight_id: li.FlightId,
         passenger_details: []

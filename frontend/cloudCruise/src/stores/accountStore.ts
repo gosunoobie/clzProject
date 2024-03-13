@@ -155,7 +155,7 @@ export const useAccountStore = defineStore('accountStore', {
     },
     async getTransactionHistory() {
       try {
-        const res = await getAPI('billing/transaction-history')
+        const res = await getAPI('transaction-history')
         this.transactionHistory = res.data['results']
         this.transactionHistoryCount = res.data['totalObjects']
         this.transactionHistoryLoading = false
@@ -228,7 +228,7 @@ export const useAccountStore = defineStore('accountStore', {
 
         // console.log(userId,'this is the uesr id')
         // console.log(payload, ' this is the payload')
-        let res = await postAPI(`users/auth_new/update_number`, payload)
+        let res = await postAPI(`users/auth/update_number`, payload)
         //  console.log('this is the response',res)
       } catch (error) {}
     }

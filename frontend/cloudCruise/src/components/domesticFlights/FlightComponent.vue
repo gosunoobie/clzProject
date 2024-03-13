@@ -83,12 +83,14 @@ const isSelected = computed(() => {
   return false
 })
 
+const createBooking = (data: any) => {
+  newFlightStore.createBooking(data)
+}
+
 const { data } = props
 </script>
 
 <template>
-  <!-- <pre>{{ data }}</pre> -->
-
   <div
     @click="selectFlight(data)"
     :class="
@@ -97,11 +99,6 @@ const { data } = props
         : 'flight-container p-[10px] sm:px-[15px] sm:py-[10px]'
     "
   >
-    <!-- <pre>
-
-    {{ data }}
-  </pre
-    > -->
     <div class="flight-details px-0 py-0 xs:py-[10px] gap-0 mxs:gap-[10px] sm:gap-[20px]">
       <div class="flight-details-top">
         <div
@@ -123,7 +120,7 @@ const { data } = props
         </div>
         <div class="flight-details-right !font-['Roboto']">
           <p
-            v-if="data.refundable === 'T'"
+            v-if="data.refundable"
             class="text-[10px] text-right xxs:text-xs refundable md:text-sm mr-[10px] mxs:mr-[39px] xsm:mr-[45px]"
           >
             Refundable
@@ -247,9 +244,7 @@ const { data } = props
         v-if="props.showButton && !newFlightStore.flightSearchPayload.returnFlight"
         @click="
           () => {
-            jwtStore.isLoggedIn
-              ? newFlightStore.reserveFlight(`${data.flightId}`)
-              : (jwtStore.showSignInModel.value = true)
+            jwtStore.isLoggedIn ? createBooking(data) : (jwtStore.showSignInModel.value = true)
           }
         "
         class="px-4 py-2 text-xs sm:text-sm book-btn"

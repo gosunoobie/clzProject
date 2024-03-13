@@ -39,7 +39,7 @@ const router = createRouter({
     },
 
     {
-      path: '/flights/:id',
+      path: '/flight-detail/:id',
       name: 'FlightDetail',
       component: () => import('../views/DomesticFlights/FlightDetail.vue')
     }

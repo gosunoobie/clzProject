@@ -108,6 +108,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
       filteredReturnFlightLists: [],
       isFlightsLoading: false,
       flightDetail: null as FlightDetailResponse | null,
+      bookingDetail: null,
       passengerForm: { adult: [], child: [] } as any,
       reservingFlight: false,
       creatingBooking: false,
@@ -320,7 +321,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
     async getFlightDetail(reserveId: string) {
       try {
         this.isFlightsLoading = true
-        const res = await getAPI(`domestic/reserve-track/${reserveId}`)
+        const res = await getAPI(`reserve-track/${reserveId}`)
         this.isFlightsLoading = false
         this.flightDetail = res.data
         this.passengerForm.adult = []
@@ -354,7 +355,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
     async reserveFlight(flightId: string | null = null) {
       try {
         this.reservingFlight = true
-        const res = await postAPI('domestic/reserve', {
+        const res = await postAPI('reserve', {
           flight_id: flightId
         })
         this.reservingFlight = false
@@ -369,7 +370,7 @@ export const useNewFlightStore = defineStore('newFlightStore', {
         const departureFlightId = this.selectedFlight?.departureFlight
         const returnFlightId = this.selectedFlight?.returnFlight
         if (returnFlightId && departureFlightId) {
-          const res = await postAPI('domestic/reserve', {
+          const res = await postAPI('reserve', {
             flight_id: departureFlightId.FlightId,
             return_flight_id: returnFlightId.FlightId
           })
@@ -381,10 +382,61 @@ export const useNewFlightStore = defineStore('newFlightStore', {
       }
     },
     async getBillingAddress() {
-      const res = await getAPI('billing/billing-address')
+      const res = await getAPI('billing-address')
       this.billingList = res.data || []
     },
-    async createBooking(bookingPayload: FlightBookingPayload) {
+    async createBooking(bookingPayload: any) {
+      try {
+        this.reservingFlight = true
+        const { id, noOfAdults, noOfChild } = bookingPayload
+        console.log(bookingPayload)
+        const res = await postAPI('book-flights', {
+          schedule: id,
+          noOfAdults: noOfAdults,
+          noOfChild: noOfChild
+        })
+        this.bookingDetail = res.data
+        /* router.push({
+          name: 'FlightDetail',
+          query: {
+scheduleId: res.data.schedule,
+            noOfAdults: res.data.noOfAdults,
+            noOfChild: res.data.noOfChild
+          }
+        }) */
+        this.passengerForm.adult = []
+
+        for (let i = 0; i < noOfAdults; i++) {
+          this.passengerForm.adult.push({
+            first_name: null,
+            gender: null,
+            last_name: null,
+            nationality: this.searchNationalityFinalQuery.code,
+            passenger_title: null,
+            passenger_type: 'ADULT'
+          })
+        }
+        this.passengerForm.child = []
+        for (let i = 0; i < noOfChild; i++) {
+          this.passengerForm.child.push({
+            first_name: null,
+            gender: null,
+            last_name: null,
+            nationality: this.searchNationalityFinalQuery.code,
+            passenger_title: null,
+            passenger_type: 'CHILD'
+          })
+        }
+
+        console.log(noOfChild, noOfAdults, this.passengerForm)
+        this.reservingFlight = false
+
+        router.push(`/flight-detail/${res.data.schedule}`)
+      } catch (error) {
+        this.reservingFlight = false
+      }
+    }
+    /* async createBooking(bookingPayload: FlightBookingPayload) {
       bookingPayload.billing_address = this.selectedBillingAddress
 
       try {
@@ -396,6 +448,6 @@ export const useNewFlightStore = defineStore('newFlightStore', {
       } catch (error) {
         this.creatingBooking = false
       }
-    }
+    } */
   }
 })
