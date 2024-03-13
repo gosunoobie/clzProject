@@ -79,12 +79,16 @@ class Booking(models.Model):
         ('Cancelled', 'Cancelled'),
     ]
     created_date = models.DateTimeField(auto_now_add=True, null=True) 
+    for_date = models.DateField(max_length=50, null=True)
     user = models.ForeignKey("users.User",on_delete=models.CASCADE)
     schedule = models.ForeignKey(AirlineSchedule,on_delete=models.CASCADE)
     no_of_adults = models.IntegerField()
     no_of_child = models.IntegerField()
     status = models.CharField(max_length=10,choices=STATUS_CHOICES, default="Pending" )
     transaction = models.ForeignKey("domestic_flights.transaction",on_delete=models.CASCADE,null=True)
+    contact_name = models.CharField(max_length=50, blank=True, null=True)
+    contact_email = models.CharField(max_length=100, blank=True, null=True)
+    contact_mobile = models.CharField(max_length=10, blank=True, null=True)
 
     @property
     def get_total_passengers(self):
@@ -120,18 +124,28 @@ class Transaction(models.Model):
         max_length=20,
         default="Pending",
     )
+    guid = models.CharField(max_length=100, null=True)
 
     billing_address = models.ForeignKey(
         BillingAddress, on_delete=models.SET_NULL, null=True,blank=True
     )
     total_amount =  models.DecimalField(max_digits=15, decimal_places=2,null=True)
     # contact person info
-    contact_name = models.CharField(max_length=50, blank=True, null=True)
-    contact_email = models.CharField(max_length=100, blank=True, null=True)
-    contact_mobile = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.payment_method_name}-{self.payment_providers_txn_id}"
+        return f"{self.id}-{self.status}"
+
+    def save(self, *args, **kwargs):
+        if not self.guid:
+            guid = str(uuid.uuid4())
+            has_guid = Transaction.objects.filter(guid=guid).exists()
+            count = 1
+            while has_guid:
+                count += 1
+                guid = str(uuid.uuid4()) + "-" + str(count)
+                has_guid = Transaction.objects.filter(guid=guid).exists()
+            self.guid = guid
+        super().save(*args, **kwargs)
 
 #class SearchHistory(models.Model):
 #    airline = models.ForeignKey(Airline, on_delete=models.CASCADE )
@@ -140,15 +154,12 @@ class Transaction(models.Model):
 
 class PassengerInfo(models.Model):
     booking = models.ForeignKey(
-        AirlineSchedule, on_delete=models.CASCADE, null=True, blank=True
+        Booking, on_delete=models.CASCADE, null=True, blank=True
     )
-    full_name = models.CharField(max_length=50, null=True, blank=True)
     first_name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=50, null=True, blank=True)
     nationality = models.CharField(max_length=50)
     age_group = models.CharField(max_length=50)
-    gender = models.CharField(max_length=50,null=True,blank=True)
-    passenger_title = models.CharField(max_length=50,null=True,blank=True)
 
     # ticket_no = models.CharField(null=True, blank=True, max_length=50)
     # pnr_no = models.CharField(null=True, blank=True, max_length=50)
@@ -215,4 +226,34 @@ class ReserveFlightInfoTrack(TimeStampedModel):
             return int(max_seconds - b.total_seconds())*1000
         except:
             return 0 
+
+class FlightTicket(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    booking = models.ForeignKey(
+        Booking, on_delete=models.CASCADE, null=True, blank=True
+    )
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    issued_date = models.DateField(max_length=50,null=True)
+    arrival_destination = models.CharField(max_length=50)
+    departure_destination = models.CharField(max_length=50)
+    arrival_time = models.TimeField(max_length=50,null=True,blank=True)
+    pnr_no = models.CharField(max_length=50)
+    guid = models.CharField(max_length=200, null= True, blank=True)
+    airline_code = models.CharField(max_length=50, null=True)
+    flight_no = models.CharField(max_length=50, null=True)
+
+
+    def save(self, *args, **kwargs):
+        if not self.guid:
+            guid = str(uuid.uuid4())
+            has_guid = FlightTicket.objects.filter(guid=guid).exists()
+            count = 1
+            while has_guid:
+                count += 1
+                guid = str(uuid.uuid4()) + "-" + str(count)
+                has_guid = FlightTicket.objects.filter(guid=guid).exists()
+            self.guid = guid
+        super().save(*args, **kwargs)
+
 

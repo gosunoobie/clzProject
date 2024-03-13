@@ -19,10 +19,14 @@ class AirlineRouteAdmin(admin.ModelAdmin):
 class AirlineScheduleAdmin(admin.ModelAdmin):
     list_display = ('id','airline_route','passenger_per_flight','departure_time','arrival_time',  )
 
+class PassengerInline(admin.StackedInline):
+    model = PassengerInfo
+    extra = 0  # Number of empty forms to display
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
     list_display = ('id','user','schedule','transaction','no_of_adults','no_of_child','status', 'created_date' )
+    inlines = [PassengerInline]
 
 
 @admin.register(Transaction)
@@ -32,8 +36,13 @@ class TransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(PassengerInfo)
 admin.site.register(FlightSupportBookingTicket)
+admin.site.register(FlightTicket)
 admin.site.register(FlightSupportBookingTicketLog)
 admin.site.register(ReserveFlightInfoTrack)
 admin.site.register(BillingAddress)
 admin.site.register(WeekDays)
+
+
+
+
 

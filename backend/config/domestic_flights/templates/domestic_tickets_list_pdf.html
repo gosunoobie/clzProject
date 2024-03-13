@@ -1,0 +1,213 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Download Ticket</title>
+    <style>
+      .header-table {
+        padding: 5px;
+      }
+      .header-table .airline-name {
+        text-align: left;
+        vertically-align: center;
+      }
+      .header-table .airline-logo {
+        width: 10%;
+      }
+
+      .header-table p {
+        font-weight: bold;
+        font-size: 20px;
+      }
+      .passenger-info {
+      }
+      .info-title {
+        font-weight: bold;
+        font-size: 12px;
+        color: white;
+        background-color: #bc1c21;
+        padding: 6px 7px;
+        margin-top: 2px;
+      }
+      .passenger-table,
+      .flight-table,
+      .fare-table {
+        padding: 2px;
+
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      .ticket-info-fields {
+        font-weight: bold;
+      }
+      .per_ticket_page {
+        page-break-after: always;
+      }
+    </style>
+  </head>
+  <body>
+    {% for ticket in booking_tickets %}
+    <div class="per_ticket_page">
+      <table class="header-table" style="width: 100%">
+        <tr>
+          <td class="airline-logo" valign="middle">
+            <img
+              src="http://usbooking.org/us/apiImages/{{ticket.airline}}.jpg"
+              alt="logo"
+              height="45"
+              width="45"
+            />
+          </td>
+          <td class="airline-name">
+            <p>{{ ticket.airline_name }}</p>
+          </td>
+          <td style="text-align: right">
+            <img
+              src="http://dev.tripturbo.com/static/assets/img/favicon/favicon.png"
+              alt="TripTurbo"
+            />
+          </td>
+        </tr>
+      </table>
+      <div
+        style="margin-top: 30px; font-weight: bold; font-size: 11px"
+        class="bottom-header-content"
+      >
+        THIS E-TICKET MUST BE PRESENTED DURING CHECK-INS. AT CHECK-IN PHASE
+        PLEASE PRESENT ID CARD AND ALL NECESSARY TRAVEL DOCUMENTS.
+      </div>
+
+      <div class="passenger-info">
+        <div class="info-title">
+          <b style="margin-top: 20px !important">
+            PASSENGER & TICKET INFORMATION</b
+          >
+        </div>
+
+        <table class="passenger-table">
+          <tr>
+            <td>PASSENGER NAME</td>
+            <td class="ticket-info-fields">
+              {{ ticket.first_name }} {{ ticket.last_name }}
+            </td>
+          </tr>
+          <tr>
+            <td>PNR NUMBER</td>
+            <td class="ticket-info-fields">{{ ticket.pnr_no }}</td>
+          </tr>
+          <tr>
+            <td>TICKET NUMBER</td>
+            <td class="ticket-info-fields">{{ ticket.ticket_no }}</td>
+          </tr>
+          <tr>
+            <td>ISSUED BY</td>
+            <td class="ticket-info-fields">{{ticket.issued_by}}</td>
+          </tr>
+          <tr>
+            <td>ISSUED DATE</td>
+            <td class="ticket-info-fields">{{ ticket.issued_date }}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="flight-info">
+        <div class="info-title">FLIGHT INFORMATION</div>
+
+        <table class="passenger-table">
+          <tr>
+            <td>FLIGHT NUMBER</td>
+            <td class="ticket-info-fields">
+              {{ ticket.airline }}{{ ticket.flight_no }}
+            </td>
+          </tr>
+          <tr>
+            <td>FROM</td>
+            <td class="ticket-info-fields">
+              {{ ticket.full_departure_destination }}
+            </td>
+          </tr>
+          <tr>
+            <td>TO</td>
+            <td class="ticket-info-fields">
+              {{ ticket.full_arrival_destination }}
+            </td>
+          </tr>
+          <tr>
+            <td>CLASS</td>
+            <td class="ticket-info-fields">{{ ticket.class_code }}</td>
+          </tr>
+          <tr>
+            <td>FLIGHT DATE</td>
+            <td class="ticket-info-fields">{{ ticket.flight_date }}</td>
+          </tr>
+          <tr>
+            <td>TIME</td>
+            <td class="ticket-info-fields">{{ ticket.flight_time }}</td>
+          </tr>
+
+          <tr>
+            <td>FREE BAGGAGE</td>
+            <td class="ticket-info-fields">{{ ticket.baggage }}</td>
+          </tr>
+        </table>
+      </div>
+      {% comment %}
+      <div class="flight-table">
+        <div class="info-title">FARE & ADDITIONAL INFORMATION</div>
+        <table class="fare-table">
+          <tr>
+            <td>FARE AMOUNT</td>
+            <td>{{ ticket.fare_currency }} {{ ticket.fare_amount }}</td>
+          </tr>
+          <tr>
+            <td>FUEL SURCHARGE</td>
+            <td>{{ ticket.fare_currency }} {{ ticket.surcharge }}</td>
+          </tr>
+          <tr>
+            <td>TAX</td>
+            <td>{{ ticket.fare_currency }} {{ ticket.tax_amount }}</td>
+          </tr>
+          <tr>
+            <td>TOTAL COST</td>
+            <td>
+              {{ ticket.fare_currency }} {{ ticket.total_commissioned_cost }}
+            </td>
+          </tr>
+          <tr>
+            <td>PAYMENT METHOD</td>
+            {% if ticket.booking.transaction.payment_method_name %}
+            <td>{{ ticket.booking.transaction.payment_method_name}}</td>
+            {% else %}
+            <td>N/A</td>
+            {% endif %}
+          </tr>
+        </table>
+      </div>
+      {% endcomment %}
+
+      <div
+        class="footer-content"
+        style="padding: 2px; font-size: 10px; margin-top: 20px"
+      >
+        <strong>AIRPORT TIME: </strong>ONE HOUR BEFORE FLIGHT TIME
+        <br />
+        <strong>EMAIL US IF YOU HAVE ANY COMPLAINTS OR SUGGESTIONS: </strong
+        ><a href="mailto:info@tripturbo.com">info@tripturbo.com</a>
+        <br />
+        <strong>FOR MORE INFORMATION, PLEASE VISIT US AT </strong
+        ><a href="www.tripturbo.com">www.tripturbo.com</a>
+        <br />
+        READ MORE ABOUT THE
+        <a href="{{ticket.terms_and_condition_url}}">TERMS AND CONDITION </a> OF
+        <strong>{{ticket.airline_name}}</strong>
+        <br />
+      </div>
+    </div>
+    {% endfor %}
+  </body>
+</html>

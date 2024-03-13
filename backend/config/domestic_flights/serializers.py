@@ -1,8 +1,15 @@
-
 from rest_framework import serializers
 from datetime import datetime, date
 from .models import *
 from rest_framework import viewsets, exceptions
+
+from .sector_list import (
+    sectors,
+    AIRLNAME_ID_NAME,
+    AIRLNAME_TERMS_AND_CONDITIONS,
+    SECTORS_KEY_VALUE,
+    SECTORS_SHORT_CODE,
+)
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -144,9 +151,15 @@ class BookingSerializer(serializers.ModelSerializer):
         }).data]
 
 
+class PassengerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PassengerInfo
+        fields= "__all__"
 
-
-
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields= "__all__"
 
 class BillingAddressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -173,3 +186,34 @@ class KhaltiWebVerifySerializer(serializers.Serializer):
     txn_id = serializers.CharField()
     pidx = serializers.CharField()
     
+
+
+class FlightTicketSerializer(serializers.ModelSerializer):
+    ticket_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FlightTicket
+        fields = "__all__"
+
+
+    def get_ticket_url(self, obj):
+        request = self.context.get("request")
+        domain = f"{request.scheme}://{request.META['HTTP_HOST']}"
+        ticket_guid = obj.guid
+        airline = obj.airline_code
+        print(obj.airline_code)
+        airline_name  = AIRLNAME_ID_NAME[airline]
+        flight_no = obj.flight_no
+        ticket_no = obj.id
+        ticket_name = f"CloudCruise__{airline_name}__{airline}{flight_no}__{ticket_no}"
+        # ticket = f"{domain}/domestic/download-ticket/{ticket_no}.pdf"
+        ticket = f"{domain}/api/download-ticket/{ticket_name}/{ticket_guid}.pdf"
+        return ticket
+
+class CustomTimeField(serializers.TimeField):
+    def to_representation(self, value):
+        # Override the to_representation method to format time as "hh:mm"
+        return value.strftime('%H:%M')
+
+
+
