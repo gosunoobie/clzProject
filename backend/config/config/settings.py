@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,11 +42,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_swagger',
+    "rest_framework_simplejwt.token_blacklist",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
     'drf_yasg', 
+    "fcm_django",
     "corsheaders",
     'core',
     'users',
-    'domestic_flights'
+    'domestic_flights',
+    'multiselectfield',
+
 ]
 
 MIDDLEWARE = [
@@ -147,13 +154,15 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-
-
+CORS_ALLOW_CREDENTIALS = True
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 
 REST_FRAMEWORK = {
 
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "DEFAULT_PARSER_CLASSES": (
         # If you use MultiPartFormParser or FormParser, we also have a camel case version
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
@@ -166,8 +175,6 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
     ),
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,  # Adjust this value as needed
 }
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -175,3 +182,17 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.User"
+
+HTTP_ONLY_COOKIE_DOMAIN= config("HTTP_ONLY_COOKIE_DOMAIN",default=None)
+
+REST_AUTH = {
+    "JWT_AUTH_REFRESH_COOKIE": "refresh",
+    "SESSION_LOGIN": False,
+    "USE_JWT": True,
+    "JWT_AUTH_COOKIE": "jwt-auth",
+    "USER_DETAILS_SERIALIZER": "users.serializers.UserSerializer",
+    # "JWT_SERIALIZER": "users.serializers.JWTCustomSerializer",
+    "JWT_SERIALIZER":"dj_rest_auth.serializers.JWTSerializer",
+    "TOKEN_MODEL": None,
+    "JWT_AUTH_HTTPONLY":True
+}

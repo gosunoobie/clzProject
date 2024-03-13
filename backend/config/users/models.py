@@ -71,6 +71,7 @@ class User(AbstractUser,SoftDeleteModel):
         self.username = self.username.lower()
         return super(User, self).save(*args, **kwargs)
 
+
     def get_roles_name(self):
         return ",".join([x.name for x in self.groups.all()])
     
@@ -86,6 +87,17 @@ class User(AbstractUser,SoftDeleteModel):
             self.deleted_date = timezone.now()
 
             return super().save(*args, **kwargs)
+
+    def generate_otp(self):
+        return 'adfasd'
+
+    @property
+    def has_added_payment_detail(self):
+        if not self.groups.filter(name="Vendor").exists():
+            return None
+        if self.paymentwallet_set.all().exists() or self.bankdetail_set.all().exists():
+            return True
+        return False
 
 class BankDetail(models.Model):
     user = models.ForeignKey(

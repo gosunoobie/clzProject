@@ -1,10 +1,13 @@
 
 
+from django.db.models import Q
 from rest_framework import serializers, exceptions
 from .models import *
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer as TokenObtainSerializer,
 )
+
+from .utils import get_pclaim
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 from django.db.transaction import atomic
@@ -15,8 +18,7 @@ from dj_rest_auth.serializers import JWTSerializer
 
 class JWTCustomSerializer(JWTSerializer):
     """
-    Serializer for JWT authentication.
-    """
+    Serializer for JWT authentication. """
 
     access = serializers.CharField(source="access_token")
     refresh = serializers.CharField(source="refresh_token")
@@ -27,7 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(write_only=True)
     groups = serializers.SerializerMethodField()
     username = serializers.CharField(required=False)
-    enrollment_status = serializers.SerializerMethodField()
     has_payment_detail = serializers.SerializerMethodField()
 
     class Meta:
@@ -61,8 +62,6 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True, "min_length": 6},
         }
 
-    def get_enrollment_status(self, obj):
-        return obj.get_service_enrollment
 
     def get_has_payment_detail(self, obj):
         return obj.has_added_payment_detail
@@ -80,17 +79,16 @@ class UserSerializer(serializers.ModelSerializer):
 
         user = User(**validated_data)
         user.set_password(password)
+        user.email_verified = True
+        user.phone_verified = True
+        user.is_active = True
         user.save()
+
         if group_name:
             group = get_object_or_404(Group, name=group_name)
             user.groups.add(group)
 
         site = get_current_site(request)
-        context = {
-            "domain": site.domain,
-            "site_name": site.name,
-            "protocol": "https" if request.is_secure() else "http",
-        }
         # if user.nationality == "Nepal":
         #     user.generate_otp()
 
@@ -139,3 +137,43 @@ class UserSerializer(serializers.ModelSerializer):
             # print("inside here")
             response["avatar"] = request.build_absolute_uri(obj.avatar.url)
         return response
+
+class EmptySerializer(serializers.Serializer):
+    """
+    Empty Seralizer that does not take or return any value
+    """
+
+    pass
+
+class TokenObtainPairSerializer(TokenObtainSerializer):
+    """
+    Custom TokenObtainPairSerializer class that will add username to the token payload
+    This can then be decoded by client to use the available data
+    """
+
+    DEVICE_CHOICES = (
+        ("android", "android"),
+        ("ios", "ios"),
+        ("web", "web"),
+    )
+    fcm_token = serializers.CharField(max_length=500)
+    fcm_type = serializers.ChoiceField(DEVICE_CHOICES)
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["username"] = user.username
+        token["pclaim"] = get_pclaim(user)
+        return token
+
+    def validate(self, attrs):
+        username = attrs.get("username")
+        user = User.objects.filter(
+            Q(username__iexact=username) | Q(mobile_number=username)
+        ).first()
+        refresh = self.get_token(user)
+        data = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+        return data

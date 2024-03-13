@@ -22,12 +22,18 @@ class AirlineScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('id','user','schedule','transaction','no_of_adults','no_of_child','status',  )
+    list_display = ('id','user','schedule','transaction','no_of_adults','no_of_child','status', 'created_date' )
 
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id','user','status','payment_method_name','total_amount'  )
+    list_display = ('id','user','status','payment_method_name','total_amount','created_date'  )
 
 
-# Register your models here.
+admin.site.register(PassengerInfo)
+admin.site.register(FlightSupportBookingTicket)
+admin.site.register(FlightSupportBookingTicketLog)
+admin.site.register(ReserveFlightInfoTrack)
+admin.site.register(BillingAddress)
+admin.site.register(WeekDays)
+

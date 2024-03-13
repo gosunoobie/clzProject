@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from datetime import datetime, date
 from .models import *
+from rest_framework import viewsets, exceptions
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,16 +29,26 @@ class AirlineScheduleSerializer(serializers.ModelSerializer):
     arrival = serializers.SerializerMethodField()
     departure = serializers.SerializerMethodField()
     currency = serializers.SerializerMethodField()
+    no_of_adults = serializers.SerializerMethodField()
+    no_of_child = serializers.SerializerMethodField()
 
     class Meta:
         model = AirlineSchedule
         fields = '__all__'
 
-    def get_total_price(self,obj):
-        no_of_adults = self.context.get("no_of_adults")
-        no_of_children = self.context.get("no_of_children")
+    def get_no_of_adults(self,obj):
+        no_of_adults = self.context.get("no_of_adults",0)
+        return no_of_adults
 
-        return obj.adult_fare * no_of_adults + obj.child_fare * no_of_children
+    def get_no_of_child(self,obj):
+        no_of_child = self.context.get("no_of_child",0)
+        return no_of_child
+
+    def get_total_price(self,obj):
+        no_of_adults = self.context.get("no_of_adults",0)
+        no_of_child = self.context.get("no_of_child",0)
+
+        return obj.adult_fare * no_of_adults + obj.child_fare * no_of_child
 
     def get_departure_code(self,obj):
         origin_city = self.context.get("departure_code")
@@ -49,10 +60,10 @@ class AirlineScheduleSerializer(serializers.ModelSerializer):
 
     def get_total_commissioned_cost(self,obj):
 
-        no_of_adults = self.context.get("no_of_adults")
-        no_of_children = self.context.get("no_of_children")
+        no_of_adults = self.context.get("no_of_adults",0)
+        no_of_child = self.context.get("no_of_child",0)
 
-        total_price = obj.adult_fare * no_of_adults + obj.child_fare * no_of_children
+        total_price = obj.adult_fare * no_of_adults + obj.child_fare * no_of_child
         return total_price - obj.discount_amount
 
 
@@ -110,7 +121,7 @@ class SearchFlightSerializer(serializers.Serializer):
             )
 
         if (
-            value.get("adult_passenger") + value.get("child_passenger")
+            value.get("adult_passenger",0) + value.get("child_passenger",0)
             > maximum_passenger_limit
         ):
             raise serializers.ValidationError(
@@ -119,8 +130,46 @@ class SearchFlightSerializer(serializers.Serializer):
 
         return value
 
-class BookingSerializer(serializers.Serializer):
-    booking_id = serializers.IntegerField(required=True)
-    no_of_adults = serializers.IntegerField(required=True)
-    no_of_children = serializers.IntegerField(default=0)
-    no_of_infant = serializers.IntegerField(default=0)
+class BookingSerializer(serializers.ModelSerializer):
+    schedule_detail = serializers.SerializerMethodField()
+    class Meta:
+        model = Booking
+        read_only_fields =['user'] 
+        fields = "__all__"
+
+    def get_schedule_detail(self, obj):
+        return [AirlineScheduleSerializer(obj.schedule, context={
+            "no_of_adults": obj.no_of_adults, 
+            "no_of_child": obj.no_of_child,
+        }).data]
+
+
+
+
+
+
+class BillingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BillingAddress
+        exclude = ("user",)
+
+
+
+
+class KhaltiRequestSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    amount = serializers.IntegerField()
+    txn_id = serializers.CharField()
+
+
+class EsewaWebRequestSerializer(serializers.Serializer):
+    amt = serializers.IntegerField()
+    rid = serializers.CharField()
+    pid = serializers.CharField()
+    scd = serializers.CharField()
+
+
+class KhaltiWebVerifySerializer(serializers.Serializer):
+    txn_id = serializers.CharField()
+    pidx = serializers.CharField()
+    
