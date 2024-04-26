@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=254, unique=True, validators=[django.core.validators.MinLengthValidator(3)], verbose_name='email address')),
                 ('mobile_number', models.CharField(blank=True, max_length=10, null=True, validators=[django.core.validators.RegexValidator(message='Phone number must contain only number.', regex='^([\\s\\d]+)$')])),
                 ('avatar', models.ImageField(blank=True, null=True, upload_to='avatar', validators=[core.validators.validate_file_size], verbose_name='Image')),
-                ('account_provider', models.CharField(default='Tripturbo', max_length=50)),
+                ('account_provider', models.CharField(default='CloudCruise', max_length=50)),
                 ('total_reward_coin', models.DecimalField(decimal_places=2, default=0, max_digits=15)),
                 ('nationality', models.CharField(blank=True, max_length=100, null=True)),
                 ('email_verified', models.BooleanField(default=False)),

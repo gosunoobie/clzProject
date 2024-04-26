@@ -392,7 +392,7 @@ class UserViewSet(viewsets.ModelViewSet):
             user = request.user
             if user.is_deleted == True:
                 raise APIException("Your account is already deleted!")
-            if user.account_provider != "Tripturbo":
+            if user.account_provider != "CloudCruise":
                 user.soft_delete()
                 return Response({"message": "Account succesfully deleted."})
             password = request.data.get("password")

@@ -132,7 +132,7 @@ class UserSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
         response = super().to_representation(obj)
         request = self.context.get("request")
-        response["messenger_url"]="http://m.me/tripturbo"
+        response["messenger_url"]="http://m.me/cloudcruise"
         if request and obj.avatar:
             # print("inside here")
             response["avatar"] = request.build_absolute_uri(obj.avatar.url)

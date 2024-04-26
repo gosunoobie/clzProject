@@ -1,6 +1,7 @@
 from django.db import models
 from multiselectfield import MultiSelectField
 from core.models import SoftDeleteModel, TimeStampedModel, SingletonModel
+from datetime import datetime
 import uuid
 from users.models import User
 
@@ -234,7 +235,7 @@ class FlightTicket(TimeStampedModel):
     )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    issued_date = models.DateField(max_length=50,null=True)
+    issued_date = models.DateField(max_length=50,default=datetime.now().strftime('%Y-%m-%d'), null=True)
     arrival_destination = models.CharField(max_length=50)
     departure_destination = models.CharField(max_length=50)
     arrival_time = models.TimeField(max_length=50,null=True,blank=True)

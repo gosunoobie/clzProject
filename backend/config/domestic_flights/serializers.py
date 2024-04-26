@@ -11,23 +11,27 @@ from .sector_list import (
     SECTORS_SHORT_CODE,
 )
 
+
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = '__all__'
+        fields = "__all__"
+
 
 class AirlineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Airline
-        fields = '__all__'
+        fields = "__all__"
+
 
 class AirlineRouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = AirlineRoute
-        fields = '__all__'
+        fields = "__all__"
+
 
 class AirlineScheduleSerializer(serializers.ModelSerializer):
-    total_price = serializers.SerializerMethodField() 
+    total_price = serializers.SerializerMethodField()
     departure_code = serializers.SerializerMethodField()
     arrival_code = serializers.SerializerMethodField()
     total_commissioned_cost = serializers.SerializerMethodField()
@@ -41,56 +45,55 @@ class AirlineScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AirlineSchedule
-        fields = '__all__'
+        fields = "__all__"
 
-    def get_no_of_adults(self,obj):
-        no_of_adults = self.context.get("no_of_adults",0)
+    def get_no_of_adults(self, obj):
+        no_of_adults = self.context.get("no_of_adults", 0)
         return no_of_adults
 
-    def get_no_of_child(self,obj):
-        no_of_child = self.context.get("no_of_child",0)
+    def get_no_of_child(self, obj):
+        no_of_child = self.context.get("no_of_child", 0)
         return no_of_child
 
-    def get_total_price(self,obj):
-        no_of_adults = self.context.get("no_of_adults",0)
-        no_of_child = self.context.get("no_of_child",0)
+    def get_total_price(self, obj):
+        no_of_adults = self.context.get("no_of_adults", 0)
+        no_of_child = self.context.get("no_of_child", 0)
 
         return obj.adult_fare * no_of_adults + obj.child_fare * no_of_child
 
-    def get_departure_code(self,obj):
+    def get_departure_code(self, obj):
         origin_city = self.context.get("departure_code")
         return origin_city
 
-    def get_arrival_code(self,obj):
+    def get_arrival_code(self, obj):
         destination_city = self.context.get("arrival_code")
         return destination_city
 
-    def get_total_commissioned_cost(self,obj):
+    def get_total_commissioned_cost(self, obj):
 
-        no_of_adults = self.context.get("no_of_adults",0)
-        no_of_child = self.context.get("no_of_child",0)
+        no_of_adults = self.context.get("no_of_adults", 0)
+        no_of_child = self.context.get("no_of_child", 0)
 
         total_price = obj.adult_fare * no_of_adults + obj.child_fare * no_of_child
         return total_price - obj.discount_amount
 
-
-    def get_airline_name(self,obj):
+    def get_airline_name(self, obj):
         return obj.airline_route.airline.name
 
-    def get_airline(self,obj):
-        if(obj.airline_route.airline.logo):
-            return f'http://127.0.0.1:8000/{obj.airline_route.airline.logo.url}'
+    def get_airline(self, obj):
+        if obj.airline_route.airline.logo:
+            return f"http://127.0.0.1:8000/{obj.airline_route.airline.logo.url}"
         else:
             return None
-    def get_arrival(self,obj):
+
+    def get_arrival(self, obj):
         return obj.airline_route.arrival.city_name
 
-    def get_departure(self,obj):
+    def get_departure(self, obj):
         return obj.airline_route.destination.city_name
-    def get_currency(self,obj):
-        return 'NPR' 
 
-
+    def get_currency(self, obj):
+        return "NPR"
 
 
 class SearchFlightSerializer(serializers.Serializer):
@@ -128,7 +131,7 @@ class SearchFlightSerializer(serializers.Serializer):
             )
 
         if (
-            value.get("adult_passenger",0) + value.get("child_passenger",0)
+            value.get("adult_passenger", 0) + value.get("child_passenger", 0)
             > maximum_passenger_limit
         ):
             raise serializers.ValidationError(
@@ -137,36 +140,43 @@ class SearchFlightSerializer(serializers.Serializer):
 
         return value
 
+
 class BookingSerializer(serializers.ModelSerializer):
     schedule_detail = serializers.SerializerMethodField()
+
     class Meta:
         model = Booking
-        read_only_fields =['user'] 
+        read_only_fields = ["user"]
         fields = "__all__"
 
     def get_schedule_detail(self, obj):
-        return [AirlineScheduleSerializer(obj.schedule, context={
-            "no_of_adults": obj.no_of_adults, 
-            "no_of_child": obj.no_of_child,
-        }).data]
+        return [
+            AirlineScheduleSerializer(
+                obj.schedule,
+                context={
+                    "no_of_adults": obj.no_of_adults,
+                    "no_of_child": obj.no_of_child,
+                },
+            ).data
+        ]
 
 
 class PassengerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerInfo
-        fields= "__all__"
+        fields = "__all__"
+
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields= "__all__"
+        fields = "__all__"
+
 
 class BillingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = BillingAddress
         exclude = ("user",)
-
-
 
 
 class KhaltiRequestSerializer(serializers.Serializer):
@@ -185,7 +195,6 @@ class EsewaWebRequestSerializer(serializers.Serializer):
 class KhaltiWebVerifySerializer(serializers.Serializer):
     txn_id = serializers.CharField()
     pidx = serializers.CharField()
-    
 
 
 class FlightTicketSerializer(serializers.ModelSerializer):
@@ -195,14 +204,14 @@ class FlightTicketSerializer(serializers.ModelSerializer):
         model = FlightTicket
         fields = "__all__"
 
-
     def get_ticket_url(self, obj):
         request = self.context.get("request")
         domain = f"{request.scheme}://{request.META['HTTP_HOST']}"
         ticket_guid = obj.guid
         airline = obj.airline_code
-        print(obj.airline_code)
-        airline_name  = AIRLNAME_ID_NAME[airline]
+        print("air line name is ", airline)
+        print("airline id name is ", AIRLNAME_ID_NAME)
+        airline_name = AIRLNAME_ID_NAME.get(airline, "-")
         flight_no = obj.flight_no
         ticket_no = obj.id
         ticket_name = f"CloudCruise__{airline_name}__{airline}{flight_no}__{ticket_no}"
@@ -210,10 +219,8 @@ class FlightTicketSerializer(serializers.ModelSerializer):
         ticket = f"{domain}/api/download-ticket/{ticket_name}/{ticket_guid}.pdf"
         return ticket
 
+
 class CustomTimeField(serializers.TimeField):
     def to_representation(self, value):
         # Override the to_representation method to format time as "hh:mm"
-        return value.strftime('%H:%M')
-
-
-
+        return value.strftime("%H:%M")

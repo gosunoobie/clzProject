@@ -430,4 +430,3 @@ def download_domestic_ticket_list(request, booking_id):
     data = {"booking": booking, "booking_tickets": booking_tickets}
     pdf = render_to_pdf("domestic_tickets_list_pdf.html", data)
     return HttpResponse(pdf, content_type="application/pdf")
-

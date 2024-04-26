@@ -47,9 +47,13 @@
         padding: 2px;
         font-size: 12px;
         margin-top: 10px;
+        min-width: 100vw;
       }
+
       .ticket-info-fields {
         font-weight: bold;
+        min-width: 600px ! important
+
       }
 
       img {
@@ -70,8 +74,8 @@
         </td>
         <td style="text-align: right">
           <img
-            src="http://dev.tripturbo.com/static/assets/img/favicon/favicon.png"
-            alt="TripTurbo"
+            src="http://dev.cloudcruise.com/static/assets/img/favicon/favicon.png"
+            alt="CloudCruise"
           />
         </td>
       </tr>
@@ -100,15 +104,15 @@
         </tr>
         <tr>
           <td>PNR NUMBER</td>
-          <td class="ticket-info-fields">{{ ticket.pnr_no }}</td>
+          <td class="ticket-info-fields">{{ ticket.pnr_no|slice:"0:5" }}</td>
         </tr>
         <tr>
           <td>TICKET NUMBER</td>
-          <td class="ticket-info-fields">{{ ticket.id }}</td>
+          <td class="ticket-info-fields">{{ ticket.id|slice:"0:5" }}</td>
         </tr>
         <tr>
           <td>ISSUED DATE</td>
-          <td class="ticket-info-fields">{{ ticket.issued_date }}</td>
+          <td class="ticket-info-fields">{{ ticket.issued_date|date:"Y-m-d" }}</td>
         </tr>
       </table>
     </div>
@@ -129,12 +133,12 @@
           <td>TO</td>
           <td class="ticket-info-fields">{{ arrival_destination }}</td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td>FLIGHT DATE</td>
           <td class="ticket-info-fields">{{ ticket.booking.for_date }}</td>
         </tr>
-        <tr>
-          <td>TIME</td>
+        <tr> -->
+          <td>FLIGHT TIME</td>
           <td class="ticket-info-fields">
             {{ ticket.booking.schedule.arrival_time|date:"H:i" }}
           </td>
