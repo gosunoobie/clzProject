@@ -90,7 +90,6 @@ export const useJwtStore = defineStore('jwt', {
     //   this.isLoggedIn = isLoggedIn;
     //   this.UserDetail = detail.data.user;
     //   this.RefreshingToken = false;
-    //   if(detail.data.user.accountProvider === "Tripturbo")
     //   console.log('wow')
     // },
 

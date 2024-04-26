@@ -45,7 +45,7 @@ export const usePaymentStore = defineStore('paymentStore', {
     async getNabilPayment(bookingInfo) {
       try {
         await fetch(
-          `https://dev.tripturbo.com/billing/nabil-payment-request/${bookingInfo.value.txnId}/website/NPR`
+          `https://dev.cloudcruise.com/billing/nabil-payment-request/${bookingInfo.value.txnId}/website/NPR`
         )
           .then((response) => response.json())
           .then((response) => {

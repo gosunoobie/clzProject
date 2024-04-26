@@ -105,7 +105,8 @@ const { data } = props
           class="flight-details-left gap-[4px] mxs:gap-[6px] xsm:gap-[10px] ml-0 mxs:ml-1 xsm:ml-[1rem]"
         >
           <!-- <img :src="data.AirlineLogo" class="airline-logo h-[24px] sm:h-[30px]" /> -->
-          <img :src="getAirlineLogoUrl(data.airline)" class="airline-logo h-[24px] sm:h-[30px]" />
+
+          <img :src="data.airline" class="airline-logo h-[24px] sm:h-[30px]" />
           <!-- 
           <div class="h-[30px] w-[30px] sm:h-[40px] sm:w-[40px] bg-no-repeat bg-center bg-contain rounded-[50%] "  :style="`background-image: url('http://usbooking.org/us/apiImages/${data.Airline}') !important`" >
 

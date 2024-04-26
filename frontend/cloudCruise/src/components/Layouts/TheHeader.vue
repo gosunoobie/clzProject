@@ -623,11 +623,9 @@ const options = [
 :focus {
   font-size: 20px;
   text-decoration: none;
-  color: var(--tripturbo-red);
 } */
 .responsive-menu-dropdown > ul > li > a:hover {
   text-decoration: none;
-  color: var(--tripturbo-red);
 }
 
 .responsive-list-menu-link {
@@ -637,7 +635,6 @@ const options = [
 
 .responsive-list-menu-link:hover {
   text-decoration: none;
-  color: var(--tripturbo-red);
 }
 
 .back-icon {
@@ -655,7 +652,6 @@ const options = [
   width: 55px;
   border-radius: 55px;
   cursor: pointer;
-  /* border: 2px solid var(--tripturbo-red); */
 }
 
 .modal-title {
@@ -683,18 +679,15 @@ const options = [
 /* .nav-bar > a:focus,
 .menu-dropdown > a:focus {
   font-weight: bold;
-  color: var(--tripturbo-red);
   text-decoration: none;
 } */
 
 .nav-bar > a:hover,
 .menu-dropdown > a:hover {
-  color: var(--tripturbo-red);
 }
 
 /* .nav-bar>a:active,
 .menu-dropdown>a:active {
-  color: var(--tripturbo-red);
   font-weight: bolder;
 } */
 

@@ -397,14 +397,6 @@ export const useNewFlightStore = defineStore('newFlightStore', {
           noOfChild: noOfChild
         })
         this.bookingDetail = res.data
-        /* router.push({
-          name: 'FlightDetail',
-          query: {
-scheduleId: res.data.schedule,
-            noOfAdults: res.data.noOfAdults,
-            noOfChild: res.data.noOfChild
-          }
-        }) */
         this.passengerForm.adult = []
 
         for (let i = 0; i < noOfAdults; i++) {

@@ -22,12 +22,6 @@ html {
 }
 
 @layer components {
-  .tripturbo-btn {
-    @apply p-2 text-sm font-semibold text-white border-none rounded-md md:text-lg md:p-2 md:px-3 bg-primary-400;
-  }
-  .tripturbo-md-btn {
-    @apply p-2 text-xs font-normal text-white border-none rounded-sm md:text-sm md:p-2 md:px-3 bg-primary-400;
-  }
   .n-button__content {
     color: black;
   }

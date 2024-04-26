@@ -22,7 +22,6 @@
           </p>
           <div class="flex justify-center gap-5 lg:gap-8 md:justify-start">
             <a
-              href="https://play.google.com/store/apps/details?id=com.pathway.tripturbo.android"
               target="_blank"
               ><img
                 loading="lazy"
